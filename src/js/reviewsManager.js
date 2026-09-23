@@ -11,7 +11,6 @@ export class ReviewsManager {
     this.container = document.getElementById('reviewsListContainer');
     this.store.subscribe('reviews:changed', () => this.render());
 
-    // Filter pills
     const filterBtns = document.querySelectorAll('.review-filter-btn');
     filterBtns.forEach(btn => {
       btn.onclick = () => {
@@ -37,9 +36,8 @@ export class ReviewsManager {
 
     if (list.length === 0) {
       this.container.innerHTML = `
-        <div style="text-align:center; padding: 48px; background:var(--bg-card); border-radius:var(--radius-xl); border:1px solid var(--border-subtle); color:var(--text-muted);">
-          <div style="font-size: 2rem; margin-bottom: 8px;">⭐</div>
-          <div style="font-weight:600; font-size:1rem; color:var(--text-primary);">No reviews found for this rating</div>
+        <div style="text-align:center; padding: 32px; background:var(--bg-surface); border-radius:var(--radius-xs); border:1px solid var(--border-default); color:var(--text-muted); font-size:0.875rem;">
+          No customer reviews found for the selected rating.
         </div>
       `;
       return;
@@ -50,46 +48,38 @@ export class ReviewsManager {
       card.className = 'card';
       card.style.display = 'flex';
       card.style.flexDirection = 'column';
-      card.style.gap = 'var(--space-sm)';
-
-      const starsHtml = '★'.repeat(rev.rating) + '☆'.repeat(5 - rev.rating);
+      card.style.gap = 'var(--space-xs)';
 
       card.innerHTML = `
         <div style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, var(--color-primary), var(--color-violet)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem;">
-              ${rev.avatar}
+          <div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <strong style="color:var(--text-primary); font-size:0.9rem;">${rev.author}</strong>
+              ${rev.verified ? `<span class="badge badge-in-stock" style="font-size:0.7rem;">Verified Purchase</span>` : ''}
             </div>
-            <div>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <strong style="color:var(--text-primary); font-size:0.95rem;">${rev.author}</strong>
-                ${rev.verified ? `<span class="badge" style="background:var(--color-emerald-bg); color:var(--color-emerald); font-size:0.65rem;">Verified Buyer</span>` : ''}
-              </div>
-              <span style="font-size:0.75rem; color:var(--text-muted);">Purchased: ${rev.productName} • ${rev.date}</span>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+              Hardware: ${rev.productName} • Recorded ${rev.date}
             </div>
           </div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <span style="color:var(--color-amber); font-size:1rem; letter-spacing:2px;">${starsHtml}</span>
-            <span class="badge" style="background:${rev.sentiment === 'positive' ? 'var(--color-emerald-bg)' : 'var(--color-rose-bg)'}; color:${rev.sentiment === 'positive' ? 'var(--color-emerald)' : 'var(--color-rose)'}; font-size:0.7rem;">
-              ${rev.sentiment}
-            </span>
+            <span class="badge" style="font-weight:700;">${rev.rating}.0 / 5.0</span>
           </div>
         </div>
 
-        <h4 style="font-size:1rem; color:var(--text-primary); margin-top:4px;">${rev.title}</h4>
-        <p style="font-size:0.875rem; color:var(--text-secondary); line-height:1.5;">${rev.content}</p>
+        <h4 style="font-size:0.95rem; font-weight:650; color:var(--text-primary); margin-top:4px;">${rev.title}</h4>
+        <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.55;">${rev.content}</p>
 
-        <!-- Admin Reply -->
+        <!-- Official Brand Response -->
         ${rev.reply ? `
-          <div style="background:var(--bg-input); border-left:3px solid var(--color-primary); border-radius:0 var(--radius-sm) var(--radius-sm) 0; padding:10px 14px; margin-top:8px;">
-            <div style="font-size:0.75rem; font-weight:700; color:var(--color-primary); margin-bottom:2px;">Nexgenesis Customer Experience Team:</div>
-            <div style="font-size:0.825rem; color:var(--text-secondary);">${rev.reply}</div>
+          <div style="background:var(--bg-subtle); border-left:2px solid var(--color-accent); padding:8px 12px; margin-top:6px; font-size:0.8125rem;">
+            <div style="font-size:0.725rem; font-weight:650; color:var(--color-accent); margin-bottom:2px;">Operations Response:</div>
+            <div style="color:var(--text-secondary);">${rev.reply}</div>
           </div>
         ` : `
-          <div class="reply-form-container" style="margin-top:8px;">
-            <div style="display:flex; gap:8px;">
-              <input type="text" class="form-input reply-input" placeholder="Post official admin response..." style="padding:6px 12px; font-size:0.825rem;">
-              <button class="btn btn-primary btn-sm send-reply-btn">Reply</button>
+          <div class="reply-form-container" style="margin-top:6px;">
+            <div style="display:flex; gap:6px;">
+              <input type="text" class="form-input reply-input" placeholder="Submit official operational response..." style="padding:5px 10px; font-size:0.8125rem;">
+              <button class="btn btn-secondary btn-sm send-reply-btn">Publish Response</button>
             </div>
           </div>
         `}
@@ -102,7 +92,7 @@ export class ReviewsManager {
           const replyText = input.value.trim();
           if (replyText) {
             this.store.addReviewReply(rev.id, replyText);
-            UI.showToast('Reply published successfully', 'success');
+            UI.showToast('Response published', 'success');
           }
         };
       }

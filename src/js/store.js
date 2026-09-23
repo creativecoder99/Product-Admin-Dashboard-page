@@ -21,9 +21,6 @@ class Store {
     const savedLogs = localStorage.getItem('nxg_logs');
     this.logs = savedLogs ? JSON.parse(savedLogs) : JSON.parse(JSON.stringify(AUDIT_LOGS));
 
-    // Load theme
-    this.theme = localStorage.getItem('nxg_theme') || 'dark';
-
     // Currencies
     this.currency = localStorage.getItem('nxg_currency') || 'USD';
     this.currencyRates = {
@@ -33,9 +30,16 @@ class Store {
       JPY: { symbol: '¥', rate: 152.4, decimals: 0 }
     };
 
+    // User authentication
+    const savedUser = localStorage.getItem('nxg_user');
+    this.currentUser = savedUser ? JSON.parse(savedUser) : null;
+
+    // Routing
+    this.currentRoute = this.getRouteFromHash() || (this.currentUser ? 'app' : 'landing');
+    this.activeDashboardView = 'dashboard';
+
     // UI state
     this.sidebarCollapsed = localStorage.getItem('nxg_sidebar_collapsed') === 'true';
-    this.activeView = 'dashboard';
     this.timeRange = '30D';
     this.selectedProductIds = new Set();
 
@@ -53,6 +57,18 @@ class Store {
 
     this.categories = CATEGORIES;
     this.timelineData = TIMELINE_DATA;
+  }
+
+  getRouteFromHash() {
+    const hash = window.location.hash.replace(/^#\/?/, '').trim();
+    if (!hash) return 'landing';
+    if (hash === 'login' || hash === 'terms' || hash === 'privacy' || hash === 'landing') {
+      return hash;
+    }
+    if (hash.startsWith('app') || hash === 'dashboard' || hash === 'products' || hash === 'inventory' || hash === 'analytics' || hash === 'reviews' || hash === 'settings') {
+      return 'app';
+    }
+    return 'landing';
   }
 
   // Pub/Sub
@@ -81,6 +97,71 @@ class Store {
     }
   }
 
+  // Authentication
+  login(email, password) {
+    if (!email || !email.includes('@')) {
+      return { success: false, message: 'Please provide a valid work email address.' };
+    }
+    if (!password || password.length < 4) {
+      return { success: false, message: 'Password must be at least 4 characters.' };
+    }
+
+    const user = {
+      email,
+      name: email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      role: 'Operations Administrator'
+    };
+
+    this.currentUser = user;
+    localStorage.setItem('nxg_user', JSON.stringify(user));
+    this.dispatch('auth:changed', user);
+    this.setRoute('app');
+    return { success: true };
+  }
+
+  loginDemo() {
+    const demoUser = {
+      email: 'alex.vance@nexgenesis.internal',
+      name: 'Alex Vance',
+      role: 'Operations Lead'
+    };
+    this.currentUser = demoUser;
+    localStorage.setItem('nxg_user', JSON.stringify(demoUser));
+    this.dispatch('auth:changed', demoUser);
+    this.setRoute('app');
+    return { success: true };
+  }
+
+  logout() {
+    this.currentUser = null;
+    localStorage.removeItem('nxg_user');
+    this.dispatch('auth:changed', null);
+    this.setRoute('landing');
+  }
+
+  // Route & Navigation
+  setRoute(route, subView = null) {
+    this.currentRoute = route;
+    if (subView) {
+      this.activeDashboardView = subView;
+    }
+    window.location.hash = route === 'app' ? `app/${this.activeDashboardView}` : route;
+    this.dispatch('route:changed', { route, subView: this.activeDashboardView });
+  }
+
+  setDashboardView(view) {
+    this.activeDashboardView = view;
+    window.location.hash = `app/${view}`;
+    this.dispatch('view:changed', view);
+  }
+
+  toggleSidebar(collapsed = null) {
+    this.sidebarCollapsed = collapsed !== null ? collapsed : !this.sidebarCollapsed;
+    localStorage.setItem('nxg_sidebar_collapsed', String(this.sidebarCollapsed));
+    this.dispatch('sidebar:toggled', this.sidebarCollapsed);
+  }
+
+  // Data persistence
   saveProducts() {
     localStorage.setItem('nxg_products', JSON.stringify(this.products));
     this.dispatch('products:changed', this.products);
@@ -97,25 +178,18 @@ class Store {
     this.dispatch('logs:changed', this.logs);
   }
 
-  addLog(action, detail, user = 'Admin') {
+  addLog(action, detail, user = null) {
+    const activeUser = user || (this.currentUser ? this.currentUser.name : 'System');
     const newLog = {
       id: 'log-' + Date.now(),
       action,
       detail,
-      user,
+      user: activeUser,
       time: 'Just now'
     };
     this.logs.unshift(newLog);
     if (this.logs.length > 20) this.logs.pop();
     this.saveLogs();
-  }
-
-  // Theme
-  setTheme(theme) {
-    this.theme = theme;
-    localStorage.setItem('nxg_theme', theme);
-    document.documentElement.setAttribute('data-theme', theme);
-    this.dispatch('theme:changed', theme);
   }
 
   // Currency
@@ -138,18 +212,6 @@ class Store {
     })}`;
   }
 
-  // Navigation
-  setActiveView(view) {
-    this.activeView = view;
-    this.dispatch('view:changed', view);
-  }
-
-  toggleSidebar(collapsed = null) {
-    this.sidebarCollapsed = collapsed !== null ? collapsed : !this.sidebarCollapsed;
-    localStorage.setItem('nxg_sidebar_collapsed', String(this.sidebarCollapsed));
-    this.dispatch('sidebar:toggled', this.sidebarCollapsed);
-  }
-
   // Time Range
   setTimeRange(range) {
     if (this.timelineData[range]) {
@@ -158,7 +220,7 @@ class Store {
     }
   }
 
-  // Products CRUD
+  // Product CRUD
   addProduct(productData) {
     const id = 'prod-' + Date.now();
     const newProduct = {
@@ -172,14 +234,13 @@ class Store {
       reviewsCount: productData.reviewsCount || 0
     };
 
-    // Calculate margin if not provided
     if (!newProduct.margin && newProduct.price && newProduct.cost) {
       newProduct.margin = Number((((newProduct.price - newProduct.cost) / newProduct.price) * 100).toFixed(1));
     }
 
     this.products.unshift(newProduct);
     this.saveProducts();
-    this.addLog('Product Created', `Created product "${newProduct.name}" (${newProduct.sku})`);
+    this.addLog('Product Created', `Added ${newProduct.name} (${newProduct.sku})`);
     return newProduct;
   }
 
@@ -200,7 +261,7 @@ class Store {
 
     this.products[idx] = updated;
     this.saveProducts();
-    this.addLog('Product Updated', `Updated product "${updated.name}" (${updated.sku})`);
+    this.addLog('Product Updated', `Modified ${updated.name} (${updated.sku})`);
     return updated;
   }
 
@@ -211,7 +272,7 @@ class Store {
     this.products = this.products.filter(p => p.id !== id);
     this.selectedProductIds.delete(id);
     this.saveProducts();
-    this.addLog('Product Deleted', `Deleted "${prod.name}" (${prod.sku})`);
+    this.addLog('Product Deleted', `Removed ${prod.name} (${prod.sku})`);
     return true;
   }
 
@@ -231,7 +292,7 @@ class Store {
       }
     });
     this.saveProducts();
-    this.addLog('Bulk Status Update', `Updated ${ids.length} products to status "${newStatus}"`);
+    this.addLog('Bulk Status', `Updated status for ${ids.length} products`);
   }
 
   restockProduct(id, quantity, warehouse = 'na') {
@@ -244,7 +305,7 @@ class Store {
     prod.updatedAt = new Date().toISOString();
 
     this.saveProducts();
-    this.addLog('Stock Replenished', `Added +${quantity} units to "${prod.name}" (${warehouse.toUpperCase()})`);
+    this.addLog('Inventory Restocked', `Allocated ${quantity} units to ${prod.name}`);
   }
 
   addReviewReply(reviewId, replyText) {
@@ -252,7 +313,7 @@ class Store {
     if (rev) {
       rev.reply = replyText;
       this.saveReviews();
-      this.addLog('Review Replied', `Replied to review by ${rev.author}`);
+      this.addLog('Response Published', `Published operational reply to ${rev.author}`);
     }
   }
 
@@ -269,10 +330,10 @@ class Store {
     this.saveProducts();
     this.saveReviews();
     this.saveLogs();
-    this.addLog('System Reset', 'Factory reset demo catalog and telemetry');
+    this.addLog('System Reset', 'Reset product database to factory demonstration state');
   }
 
-  // Metrics Calculation
+  // Metrics
   getMetrics() {
     const totalProducts = this.products.length;
     const activeProducts = this.products.filter(p => p.status === 'published').length;
@@ -326,12 +387,10 @@ class Store {
     };
   }
 
-  // Filtered & Sorted Products
   getFilteredProducts() {
     let list = [...this.products];
     const { search, category, status, stockStatus, sortBy } = this.productFilter;
 
-    // Search query
     if (search.trim()) {
       const q = search.toLowerCase().trim();
       list = list.filter(p =>
@@ -342,17 +401,14 @@ class Store {
       );
     }
 
-    // Category filter
     if (category !== 'all') {
       list = list.filter(p => p.category === category);
     }
 
-    // Status filter
     if (status !== 'all') {
       list = list.filter(p => p.status === status);
     }
 
-    // Stock Status filter
     if (stockStatus !== 'all') {
       if (stockStatus === 'in-stock') {
         list = list.filter(p => p.stock > (p.lowStockThreshold || 15));
@@ -363,7 +419,6 @@ class Store {
       }
     }
 
-    // Sorting
     list.sort((a, b) => {
       switch (sortBy) {
         case 'name-asc':

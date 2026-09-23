@@ -1,4 +1,4 @@
-// Pure SVG Vector Charting Engine for Nexgenesis Dashboard
+// Restrained SVG Vector Charting Engine for Nexgenesis
 
 export class ChartEngine {
   static createSVGElement(tag, attrs = {}) {
@@ -37,8 +37,8 @@ export class ChartEngine {
     container.innerHTML = '';
 
     const width = container.clientWidth || 600;
-    const height = container.clientHeight || 260;
-    const padding = { top: 20, right: 24, bottom: 35, left: 60 };
+    const height = container.clientHeight || 240;
+    const padding = { top: 15, right: 20, bottom: 30, left: 60 };
 
     const chartW = width - padding.left - padding.right;
     const chartH = height - padding.top - padding.bottom;
@@ -48,25 +48,9 @@ export class ChartEngine {
       class: 'svg-chart'
     });
 
-    // Defs & Gradients
-    const defs = this.createSVGElement('defs');
-    const gradId = 'revenue-grad-' + Math.random().toString(36).substring(2, 8);
-    const grad = this.createSVGElement('linearGradient', {
-      id: gradId,
-      x1: '0', y1: '0', x2: '0', y2: '1'
-    });
-
-    const stop1 = this.createSVGElement('stop', { offset: '0%', 'stop-color': '#6366f1', 'stop-opacity': '0.45' });
-    const stop2 = this.createSVGElement('stop', { offset: '95%', 'stop-color': '#6366f1', 'stop-opacity': '0.0' });
-    grad.appendChild(stop1);
-    grad.appendChild(stop2);
-    defs.appendChild(grad);
-    svg.appendChild(defs);
-
     const values = data.revenue;
     const labels = data.labels;
     const maxVal = Math.max(...values) * 1.15 || 10000;
-    const minVal = 0;
 
     // Gridlines & Y-Axis values
     const gridRows = 4;
@@ -74,7 +58,6 @@ export class ChartEngine {
       const y = padding.top + (chartH / gridRows) * i;
       const val = maxVal - (maxVal / gridRows) * i;
 
-      // Line
       const line = this.createSVGElement('line', {
         x1: padding.left,
         y1: y,
@@ -84,9 +67,8 @@ export class ChartEngine {
       });
       svg.appendChild(line);
 
-      // Y Text
       const text = this.createSVGElement('text', {
-        x: padding.left - 10,
+        x: padding.left - 8,
         y: y + 4,
         'text-anchor': 'end',
         class: 'chart-axis-text'
@@ -108,17 +90,18 @@ export class ChartEngine {
 
     const area = this.createSVGElement('path', {
       d: areaPathStr,
-      fill: `url(#${gradId})`,
-      class: 'chart-area'
+      fill: 'var(--color-accent-subtle)',
+      opacity: '0.6'
     });
     svg.appendChild(area);
 
     // Stroke Line
     const strokeLine = this.createSVGElement('path', {
       d: spline,
-      stroke: '#6366f1',
-      'stroke-width': '3',
-      class: 'chart-line'
+      stroke: 'var(--color-accent)',
+      'stroke-width': '2',
+      fill: 'none',
+      'stroke-linecap': 'round'
     });
     svg.appendChild(strokeLine);
 
@@ -126,20 +109,20 @@ export class ChartEngine {
     points.forEach((pt) => {
       const xText = this.createSVGElement('text', {
         x: pt.x,
-        y: height - 10,
+        y: height - 8,
         'text-anchor': 'middle',
         class: 'chart-axis-text'
       });
       xText.textContent = pt.label;
       svg.appendChild(xText);
 
-      // Point circle
       const dot = this.createSVGElement('circle', {
         cx: pt.x,
         cy: pt.y,
-        r: '4',
-        stroke: '#6366f1',
-        class: 'chart-point'
+        r: '3.5',
+        fill: 'var(--bg-surface)',
+        stroke: 'var(--color-accent)',
+        'stroke-width': '2'
       });
       svg.appendChild(dot);
     });
@@ -175,7 +158,6 @@ export class ChartEngine {
         return;
       }
 
-      // Find closest point
       let closestPt = points[0];
       let minDiff = Infinity;
       points.forEach(pt => {
@@ -211,7 +193,6 @@ export class ChartEngine {
     if (!container) return;
     container.innerHTML = '';
 
-    // Calculate revenue per category
     const catMap = {};
     categories.forEach(c => {
       catMap[c.id] = { name: c.name, color: c.color, revenue: 0, count: 0 };
@@ -230,17 +211,16 @@ export class ChartEngine {
     const segments = Object.values(catMap).filter(c => c.revenue > 0);
     if (totalRev === 0) totalRev = 1;
 
-    // Layout
     const layout = document.createElement('div');
     layout.className = 'donut-layout';
 
     const svgWrapper = document.createElement('div');
     svgWrapper.className = 'donut-svg-wrapper';
 
-    const size = 200;
+    const size = 160;
     const center = size / 2;
-    const radius = 80;
-    const innerRadius = 55;
+    const radius = 68;
+    const innerRadius = 46;
 
     const svg = this.createSVGElement('svg', {
       viewBox: `0 0 ${size} ${size}`,
@@ -250,7 +230,7 @@ export class ChartEngine {
 
     let cumulativeAngle = -Math.PI / 2;
 
-    segments.forEach((seg, idx) => {
+    segments.forEach((seg) => {
       const sliceAngle = (seg.revenue / totalRev) * (Math.PI * 2);
       const startAngle = cumulativeAngle;
       const endAngle = cumulativeAngle + sliceAngle;
@@ -279,27 +259,13 @@ export class ChartEngine {
       const path = this.createSVGElement('path', {
         d: pathData,
         fill: seg.color,
-        stroke: 'var(--bg-card)',
-        'stroke-width': '2',
-        class: 'donut-slice'
+        stroke: 'var(--bg-surface)',
+        'stroke-width': '1.5'
       });
-
-      path.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
-      path.onmouseenter = () => {
-        path.style.opacity = '0.85';
-        centerVal.textContent = `${((seg.revenue / totalRev) * 100).toFixed(0)}%`;
-        centerLabel.textContent = seg.name;
-      };
-      path.onmouseleave = () => {
-        path.style.opacity = '1';
-        centerVal.textContent = formatCurrency(totalRev);
-        centerLabel.textContent = 'Total Revenue';
-      };
 
       svg.appendChild(path);
     });
 
-    // Center Text
     const centerText = document.createElement('div');
     centerText.className = 'donut-center-text';
     const centerVal = document.createElement('div');
@@ -307,7 +273,7 @@ export class ChartEngine {
     centerVal.textContent = formatCurrency(totalRev);
     const centerLabel = document.createElement('div');
     centerLabel.className = 'donut-center-label';
-    centerLabel.textContent = 'Total Revenue';
+    centerLabel.textContent = 'Revenue';
 
     centerText.appendChild(centerVal);
     centerText.appendChild(centerLabel);
@@ -316,7 +282,6 @@ export class ChartEngine {
     svgWrapper.appendChild(centerText);
     layout.appendChild(svgWrapper);
 
-    // Legend
     const legend = document.createElement('div');
     legend.className = 'donut-legend';
 
@@ -327,9 +292,9 @@ export class ChartEngine {
       item.innerHTML = `
         <div class="donut-legend-left">
           <div class="donut-legend-color" style="background:${seg.color}"></div>
-          <span class="donut-legend-name">${seg.name}</span>
+          <span>${seg.name}</span>
         </div>
-        <span class="donut-legend-val">${pct}%</span>
+        <strong>${pct}%</strong>
       `;
       legend.appendChild(item);
     });
@@ -338,20 +303,20 @@ export class ChartEngine {
     container.appendChild(layout);
   }
 
-  // Mini Sparkline Generator for KPI cards
-  static renderSparkline(svgElement, points, color = '#6366f1') {
+  // Mini Sparkline
+  static renderSparkline(svgElement, points, color = '#1e3a5f') {
     if (!svgElement) return;
     svgElement.innerHTML = '';
 
-    const width = 100;
-    const height = 36;
+    const width = 80;
+    const height = 28;
     const min = Math.min(...points);
     const max = Math.max(...points) || 1;
     const range = max - min || 1;
 
     const coords = points.map((val, idx) => ({
       x: (width / (points.length - 1)) * idx,
-      y: height - 4 - ((val - min) / range) * (height - 8)
+      y: height - 3 - ((val - min) / range) * (height - 6)
     }));
 
     const pathD = this.getCurvedPath(coords);
@@ -359,7 +324,7 @@ export class ChartEngine {
       d: pathD,
       fill: 'none',
       stroke: color,
-      'stroke-width': '2.2',
+      'stroke-width': '1.8',
       'stroke-linecap': 'round'
     });
 

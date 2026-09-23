@@ -32,7 +32,7 @@ export const DEFAULT_PRODUCTS = [
     description: 'The Nexgenesis Quantum Hub serves as the central neural core of next-generation ambient homes. Equipped with an on-device tensor processor, zero-latency local Matter routing, and an illuminated haptic status ring.',
     seo: {
       slug: 'nexgenesis-quantum-smart-hub',
-      metaTitle: 'Nexgenesis Quantum Hub - Neural Smart Home Controller',
+      metaTitle: 'Nexgenesis Quantum Hub Neural Smart Home Controller',
       metaDescription: 'Shop the Nexgenesis Quantum Hub with edge AI inference and instant Matter 2.0 connectivity.'
     },
     createdAt: '2026-01-14T08:30:00Z',

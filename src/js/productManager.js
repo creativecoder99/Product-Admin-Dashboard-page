@@ -16,17 +16,15 @@ export class ProductManager {
     this.bulkActionsBar = document.getElementById('bulkActionsBar');
     this.bulkCountBadge = document.getElementById('bulkSelectedCount');
 
-    // Subscribe to changes
     this.store.subscribe('products:changed', () => this.render());
     this.store.subscribe('currency:changed', () => this.render());
 
-    // Listen to custom drawer trigger
     window.addEventListener('edit-product-triggered', (e) => {
       this.openEditModal(e.detail);
     });
 
-    this.bindFormEvents();
     this.bindFilterEvents();
+    this.bindFormEvents();
     this.render();
   }
 
@@ -96,7 +94,6 @@ export class ProductManager {
       };
     }
 
-    // Select All
     if (this.selectAllCheckbox) {
       this.selectAllCheckbox.onchange = (e) => {
         const checked = e.target.checked;
@@ -111,7 +108,6 @@ export class ProductManager {
       };
     }
 
-    // Bulk buttons
     const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
     const bulkPublishBtn = document.getElementById('bulkPublishBtn');
     const bulkDraftBtn = document.getElementById('bulkDraftBtn');
@@ -122,7 +118,7 @@ export class ProductManager {
         if (ids.length === 0) return;
         UI.showConfirm(
           'Delete Selected Products',
-          `Are you sure you want to permanently delete ${ids.length} selected products? This action cannot be undone.`,
+          `Are you sure you want to permanently delete ${ids.length} selected products? This action cannot be reversed.`,
           () => {
             this.store.batchDeleteProducts(ids);
             UI.showToast(`Deleted ${ids.length} products`, 'success');
@@ -143,7 +139,7 @@ export class ProductManager {
       bulkDraftBtn.onclick = () => {
         const ids = Array.from(this.store.selectedProductIds);
         this.store.batchUpdateStatus(ids, 'draft');
-        UI.showToast(`Moved ${ids.length} products to draft`, 'info');
+        UI.showToast(`Set ${ids.length} products to draft`, 'info');
       };
     }
   }
@@ -173,7 +169,6 @@ export class ProductManager {
     const totalItems = filtered.length;
     const totalPages = Math.ceil(totalItems / pageSize) || 1;
 
-    // Adjust page if out of bounds
     if (page > totalPages) {
       this.store.productFilter.page = totalPages;
     }
@@ -181,11 +176,10 @@ export class ProductManager {
     const start = (this.store.productFilter.page - 1) * pageSize;
     const currentProducts = filtered.slice(start, start + pageSize);
 
-    // Update pagination info
     if (this.paginationInfo) {
       const from = totalItems === 0 ? 0 : start + 1;
       const to = Math.min(start + pageSize, totalItems);
-      this.paginationInfo.textContent = `Showing ${from} - ${to} of ${totalItems} products`;
+      this.paginationInfo.textContent = `Displaying ${from} to ${to} of ${totalItems} products`;
     }
 
     this.renderPaginationControls(totalPages);
@@ -213,10 +207,9 @@ export class ProductManager {
     if (products.length === 0) {
       this.tableBody.innerHTML = `
         <tr>
-          <td colspan="7" style="text-align:center; padding: 48px 16px; color: var(--text-muted);">
-            <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
-            <div style="font-weight: 600; font-size: 1rem; color: var(--text-primary);">No products match your search</div>
-            <p style="font-size: 0.85rem; margin-top: 4px;">Try adjusting filters or clear your search query.</p>
+          <td colspan="7" style="text-align:center; padding: 36px 16px; color: var(--text-muted);">
+            <div style="font-weight: 600; font-size: 0.95rem; color: var(--text-primary);">No products match the selected criteria</div>
+            <p style="font-size: 0.8125rem; margin-top: 4px;">Adjust filters or clear search query to inspect other records.</p>
           </td>
         </tr>
       `;
@@ -228,78 +221,55 @@ export class ProductManager {
       const isSelected = this.store.selectedProductIds.has(p.id);
       if (isSelected) tr.classList.add('selected');
 
-      const categoryObj = this.store.categories.find(c => c.id === p.category) || { name: p.category, color: '#6366f1' };
+      const categoryObj = this.store.categories.find(c => c.id === p.category) || { name: p.category, color: '#1e3a5f' };
 
-      // Stock status
       let stockBadgeClass = 'badge-in-stock';
       let stockLabel = `${p.stock} units`;
       if (p.stock === 0) {
         stockBadgeClass = 'badge-out-of-stock';
-        stockLabel = 'Out of Stock';
+        stockLabel = 'Depleted';
       } else if (p.stock <= (p.lowStockThreshold || 15)) {
         stockBadgeClass = 'badge-low-stock';
-        stockLabel = `${p.stock} Low Stock`;
+        stockLabel = `${p.stock} (Low)`;
       }
 
-      // Stock health percent
-      const stockMax = Math.max(100, p.stock * 1.5);
-      const stockPct = Math.min(100, (p.stock / stockMax) * 100);
-
       tr.innerHTML = `
-        <td>
-          <input type="checkbox" class="product-select-cb" data-id="${p.id}" ${isSelected ? 'checked' : ''} style="cursor:pointer; width:16px; height:16px;">
+        <td style="width:36px;">
+          <input type="checkbox" class="product-select-cb" data-id="${p.id}" ${isSelected ? 'checked' : ''} aria-label="Select ${p.name}">
         </td>
         <td>
-          <div class="product-cell">
-            <img class="product-thumb" src="${p.image}" alt="${p.name}">
-            <div class="product-meta">
-              <span class="product-name-link" data-id="${p.id}">${p.name}</span>
-              <span class="product-sku">${p.sku}</span>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img src="${p.image}" alt="${p.name}" style="width:40px; height:40px; border-radius:var(--radius-xs); object-fit:cover; border:1px solid var(--border-default); flex-shrink:0;">
+            <div style="display:flex; flex-direction:column;">
+              <span class="product-name-link" data-id="${p.id}" style="font-weight:600; color:var(--text-primary); cursor:pointer;">${p.name}</span>
+              <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">${p.sku}</span>
             </div>
           </div>
         </td>
         <td>
-          <span class="badge" style="background:${categoryObj.color}1c; color:${categoryObj.color}; border: 1px solid ${categoryObj.color}33;">
-            ${categoryObj.name}
-          </span>
+          <span class="badge">${categoryObj.name}</span>
         </td>
         <td>
-          <div style="display:flex; flex-direction:column; gap:4px; min-width: 110px;">
-            <span class="badge ${stockBadgeClass}" style="width:fit-content;">
-              <span class="badge-dot-indicator"></span>${stockLabel}
-            </span>
-            <div class="progress-bar-container" style="height:4px;">
-              <div class="progress-bar-fill ${p.stock === 0 ? 'progress-rose' : (p.stock <= 15 ? 'progress-amber' : 'progress-emerald')}" style="width:${stockPct}%"></div>
-            </div>
-          </div>
+          <span class="badge ${stockBadgeClass}">${stockLabel}</span>
         </td>
         <td>
           <div style="display:flex; flex-direction:column;">
-            <span style="font-weight:700; color:var(--text-primary); font-size:0.95rem;">${this.store.formatPrice(p.price)}</span>
+            <strong style="color:var(--text-primary); font-size:0.9rem;">${this.store.formatPrice(p.price)}</strong>
             <span style="font-size:0.75rem; color:var(--text-muted);">${p.margin}% margin</span>
           </div>
         </td>
         <td>
-          <span class="badge badge-${p.status}">
-            <span class="badge-dot-indicator"></span>${p.status}
-          </span>
+          <span class="badge ${p.status === 'published' ? 'badge-published' : ''}">${p.status}</span>
         </td>
         <td style="text-align:right;">
-          <div style="display:inline-flex; align-items:center; gap:6px;">
-            <button class="btn btn-secondary btn-sm quick-view-btn" data-id="${p.id}" title="Quick View">
-              <span>👁️</span>
-            </button>
-            <button class="btn btn-secondary btn-sm edit-product-btn" data-id="${p.id}" title="Edit Product">
-              <span>✏️</span>
-            </button>
-            <button class="btn btn-secondary btn-sm delete-product-btn" data-id="${p.id}" title="Delete" style="color:var(--color-rose);">
-              <span>🗑️</span>
-            </button>
+          <div style="display:inline-flex; align-items:center; gap:4px;">
+            <button class="btn btn-secondary btn-sm quick-view-btn" data-id="${p.id}">View</button>
+            <button class="btn btn-secondary btn-sm edit-product-btn" data-id="${p.id}">Edit</button>
+            <button class="btn btn-secondary btn-sm delete-product-btn" data-id="${p.id}" style="color:var(--color-danger);">Delete</button>
           </div>
         </td>
       `;
 
-      // Checkbox event
       const cb = tr.querySelector('.product-select-cb');
       cb.onchange = (e) => {
         if (e.target.checked) {
@@ -312,21 +282,17 @@ export class ProductManager {
         this.updateBulkBar();
       };
 
-      // Open drawer on name or quick view
       tr.querySelector('.product-name-link').onclick = () => UI.openDrawer(p, this.store);
       tr.querySelector('.quick-view-btn').onclick = () => UI.openDrawer(p, this.store);
-
-      // Edit
       tr.querySelector('.edit-product-btn').onclick = () => this.openEditModal(p);
 
-      // Delete
       tr.querySelector('.delete-product-btn').onclick = () => {
         UI.showConfirm(
           'Delete Product',
-          `Are you sure you want to delete "${p.name}"? This action cannot be reversed.`,
+          `Are you sure you want to delete ${p.name}? This removes the record from local inventory catalog.`,
           () => {
             this.store.deleteProduct(p.id);
-            UI.showToast(`Deleted "${p.name}"`, 'success');
+            UI.showToast(`Deleted ${p.name}`, 'success');
           }
         );
       };
@@ -341,10 +307,9 @@ export class ProductManager {
 
     if (products.length === 0) {
       this.productGrid.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align:center; padding: 48px 16px; color: var(--text-muted); background:var(--bg-card); border-radius:var(--radius-xl); border:1px solid var(--border-subtle);">
-          <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
-          <div style="font-weight: 600; font-size: 1rem; color: var(--text-primary);">No products found</div>
-          <p style="font-size: 0.85rem; margin-top: 4px;">Adjust your filters to see results.</p>
+        <div style="grid-column: 1 / -1; text-align:center; padding: 36px 16px; color: var(--text-muted); background:var(--bg-surface); border:1px solid var(--border-default); border-radius:var(--radius-sm);">
+          <div style="font-weight: 600; font-size: 0.95rem; color: var(--text-primary);">No products found</div>
+          <p style="font-size: 0.8125rem; margin-top: 4px;">Adjust search terms or reset filters.</p>
         </div>
       `;
       return;
@@ -352,60 +317,45 @@ export class ProductManager {
 
     products.forEach(p => {
       const card = document.createElement('div');
-      card.className = 'product-card';
+      card.className = 'card';
+      card.style.display = 'flex';
+      card.style.flexDirection = 'column';
+      card.style.padding = '0';
+      card.style.overflow = 'hidden';
 
-      const categoryObj = this.store.categories.find(c => c.id === p.category) || { name: p.category, color: '#6366f1' };
+      const categoryObj = this.store.categories.find(c => c.id === p.category) || { name: p.category, color: '#1e3a5f' };
 
       card.innerHTML = `
-        <div class="product-card-media">
-          <img class="product-card-img" src="${p.image}" alt="${p.name}">
-          <div class="product-card-badge-top">
-            <span class="badge badge-${p.status}">
-              <span class="badge-dot-indicator"></span>${p.status}
-            </span>
-          </div>
-          <div class="product-card-actions-top">
-            <button class="btn btn-secondary btn-sm grid-quick-view-btn" data-id="${p.id}" title="Quick View" style="padding:4px 8px; font-size:0.75rem;">
-              👁️ View
-            </button>
-            <button class="btn btn-secondary btn-sm grid-edit-btn" data-id="${p.id}" title="Edit" style="padding:4px 8px; font-size:0.75rem;">
-              ✏️
-            </button>
+        <div style="width:100%; height:180px; background:var(--bg-subtle); border-bottom:1px solid var(--border-default); position:relative; overflow:hidden;">
+          <img src="${p.image}" alt="${p.name}" style="width:100%; height:100%; object-fit:cover;">
+          <div style="position:absolute; top:8px; left:8px;">
+            <span class="badge ${p.status === 'published' ? 'badge-published' : ''}">${p.status}</span>
           </div>
         </div>
-        <div class="product-card-content">
-          <div style="display:flex; align-items:center; justify-content:space-between;">
-            <span class="product-card-category" style="color:${categoryObj.color}">${categoryObj.name}</span>
-            <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">${p.sku}</span>
+        <div style="padding:var(--space-md); display:flex; flex-direction:column; gap:6px; flex:1;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.75rem; color:var(--text-muted);">${categoryObj.name}</span>
+            <span style="font-family:var(--font-mono); font-size:0.725rem; color:var(--text-muted);">${p.sku}</span>
           </div>
-          <h4 class="product-card-title">${p.name}</h4>
-          <p style="font-size:0.8rem; color:var(--text-secondary); line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
-            ${p.subtitle || p.description}
+          <h4 style="font-size:0.95rem; font-weight:650; color:var(--text-primary);">${p.name}</h4>
+          <p style="font-size:0.8125rem; color:var(--text-secondary); line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+            ${p.description}
           </p>
-          <div class="product-card-footer">
-            <div style="display:flex; flex-direction:column;">
-              <span class="product-card-price">${this.store.formatPrice(p.price)}</span>
-              <span class="product-card-cost">${p.stock} in stock (${p.margin}% margin)</span>
+          <div style="margin-top:auto; padding-top:var(--space-sm); border-top:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <div style="font-size:1.05rem; font-weight:700; color:var(--text-primary);">${this.store.formatPrice(p.price)}</div>
+              <div style="font-size:0.725rem; color:var(--text-muted);">${p.stock} in stock</div>
             </div>
-            <div style="display:flex; align-items:center; gap:4px; font-size:0.8rem; font-weight:700; color:var(--color-amber);">
-              <span>★</span>
-              <span>${p.rating || '5.0'}</span>
+            <div style="display:flex; gap:4px;">
+              <button class="btn btn-secondary btn-sm grid-view-btn">View</button>
+              <button class="btn btn-secondary btn-sm grid-edit-btn">Edit</button>
             </div>
           </div>
         </div>
       `;
 
-      card.querySelector('.grid-quick-view-btn').onclick = (e) => {
-        e.stopPropagation();
-        UI.openDrawer(p, this.store);
-      };
-
-      card.querySelector('.grid-edit-btn').onclick = (e) => {
-        e.stopPropagation();
-        this.openEditModal(p);
-      };
-
-      card.onclick = () => UI.openDrawer(p, this.store);
+      card.querySelector('.grid-view-btn').onclick = () => UI.openDrawer(p, this.store);
+      card.querySelector('.grid-edit-btn').onclick = () => this.openEditModal(p);
 
       this.productGrid.appendChild(card);
     });
@@ -417,10 +367,9 @@ export class ProductManager {
 
     const { page } = this.store.productFilter;
 
-    // Prev Button
     const prevBtn = document.createElement('button');
-    prevBtn.className = 'page-btn';
-    prevBtn.textContent = '‹';
+    prevBtn.className = 'btn btn-secondary btn-sm';
+    prevBtn.textContent = 'Previous';
     prevBtn.disabled = page <= 1;
     prevBtn.onclick = () => {
       if (page > 1) {
@@ -430,10 +379,9 @@ export class ProductManager {
     };
     this.paginationContainer.appendChild(prevBtn);
 
-    // Page Numbers
     for (let i = 1; i <= totalPages; i++) {
       const pageBtn = document.createElement('button');
-      pageBtn.className = `page-btn ${i === page ? 'active' : ''}`;
+      pageBtn.className = `btn btn-sm ${i === page ? 'btn-primary' : 'btn-secondary'}`;
       pageBtn.textContent = i;
       pageBtn.onclick = () => {
         this.store.productFilter.page = i;
@@ -442,10 +390,9 @@ export class ProductManager {
       this.paginationContainer.appendChild(pageBtn);
     }
 
-    // Next Button
     const nextBtn = document.createElement('button');
-    nextBtn.className = 'page-btn';
-    nextBtn.textContent = '›';
+    nextBtn.className = 'btn btn-secondary btn-sm';
+    nextBtn.textContent = 'Next';
     nextBtn.disabled = page >= totalPages;
     nextBtn.onclick = () => {
       if (page < totalPages) {
@@ -456,20 +403,13 @@ export class ProductManager {
     this.paginationContainer.appendChild(nextBtn);
   }
 
-  // Form & Modal Operations
   bindFormEvents() {
-    const modal = document.getElementById('productFormModal');
     const form = document.getElementById('productForm');
     const priceInput = document.getElementById('formProductPrice');
     const costInput = document.getElementById('formProductCost');
     const marginDisplay = document.getElementById('formCalculatedMargin');
     const profitDisplay = document.getElementById('formCalculatedProfit');
-    const seoTitleInput = document.getElementById('formProductTitle');
-    const seoPreviewTitle = document.getElementById('seoPreviewTitle');
-    const seoPreviewSnippet = document.getElementById('seoPreviewSnippet');
-    const descInput = document.getElementById('formProductDesc');
 
-    // Real-time margin calculation
     const calcMargin = () => {
       const price = parseFloat(priceInput.value) || 0;
       const cost = parseFloat(costInput.value) || 0;
@@ -483,32 +423,11 @@ export class ProductManager {
     if (priceInput) priceInput.oninput = calcMargin;
     if (costInput) costInput.oninput = calcMargin;
 
-    // Real-time SEO preview
-    if (seoTitleInput && seoPreviewTitle) {
-      seoTitleInput.oninput = (e) => {
-        seoPreviewTitle.textContent = e.target.value || 'Product Title | Nexgenesis';
-      };
-    }
-
-    if (descInput && seoPreviewSnippet) {
-      descInput.oninput = (e) => {
-        seoPreviewSnippet.textContent = e.target.value.substring(0, 150) || 'Product meta description preview...';
-      };
-    }
-
-    // New Product button in UI
-    const newProductBtn = document.getElementById('newProductBtn');
-    if (newProductBtn) {
-      newProductBtn.onclick = () => this.openCreateModal();
-    }
-
-    // Close modal
     const closeBtn = document.getElementById('closeProductModalBtn');
     const cancelBtn = document.getElementById('cancelProductModalBtn');
     if (closeBtn) closeBtn.onclick = () => UI.closeModal('productFormModal');
     if (cancelBtn) cancelBtn.onclick = () => UI.closeModal('productFormModal');
 
-    // Form submit
     if (form) {
       form.onsubmit = (e) => {
         e.preventDefault();
@@ -521,17 +440,10 @@ export class ProductManager {
     this.editingProductId = null;
     const form = document.getElementById('productForm');
     const modalTitle = document.getElementById('productModalTitle');
-    if (modalTitle) modalTitle.textContent = 'Create New Product';
+    if (modalTitle) modalTitle.textContent = 'Add Product Record';
     if (form) form.reset();
 
-    // Default image
-    const imgSelect = document.getElementById('formProductImage');
-    if (imgSelect) imgSelect.value = '/assets/products/quantum-hub.jpg';
-
-    // Populate categories select
     this.populateCategorySelect();
-
-    // Reset margin display
     document.getElementById('formCalculatedMargin').textContent = '0%';
     document.getElementById('formCalculatedProfit').textContent = '$0.00';
 
@@ -547,7 +459,6 @@ export class ProductManager {
 
     this.populateCategorySelect();
 
-    // Fill fields
     document.getElementById('formProductTitle').value = product.name || '';
     document.getElementById('formProductSubtitle').value = product.subtitle || '';
     document.getElementById('formProductSku').value = product.sku || '';
@@ -565,7 +476,6 @@ export class ProductManager {
     const imgSelect = document.getElementById('formProductImage');
     if (imgSelect) imgSelect.value = product.image || '/assets/products/quantum-hub.jpg';
 
-    // Update margin & SEO snippet
     const price = product.price || 0;
     const cost = product.cost || 0;
     const profit = price - cost;
@@ -573,11 +483,6 @@ export class ProductManager {
 
     document.getElementById('formCalculatedMargin').textContent = `${margin}%`;
     document.getElementById('formCalculatedProfit').textContent = this.store.formatPrice(profit);
-
-    const seoTitle = document.getElementById('seoPreviewTitle');
-    const seoSnippet = document.getElementById('seoPreviewSnippet');
-    if (seoTitle) seoTitle.textContent = product.seo?.metaTitle || product.name;
-    if (seoSnippet) seoSnippet.textContent = product.seo?.metaDescription || product.description;
 
     UI.openModal('productFormModal');
   }
@@ -589,7 +494,7 @@ export class ProductManager {
     this.store.categories.forEach(c => {
       const opt = document.createElement('option');
       opt.value = c.id;
-      opt.textContent = `${c.icon} ${c.name}`;
+      opt.textContent = `${c.name} (${c.code})`;
       sel.appendChild(opt);
     });
   }
@@ -613,7 +518,7 @@ export class ProductManager {
     const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
 
     if (!name || !sku) {
-      UI.showToast('Please provide both Product Title and SKU', 'error');
+      UI.showToast('Product Title and SKU are required', 'error');
       return;
     }
 
@@ -631,20 +536,15 @@ export class ProductManager {
       lowStockThreshold,
       description,
       tags,
-      image,
-      seo: {
-        slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        metaTitle: `${name} | Nexgenesis Official`,
-        metaDescription: description.substring(0, 150)
-      }
+      image
     };
 
     if (this.editingProductId) {
       this.store.updateProduct(this.editingProductId, payload);
-      UI.showToast(`Updated "${name}" successfully`, 'success');
+      UI.showToast(`Updated ${name}`, 'success');
     } else {
       this.store.addProduct(payload);
-      UI.showToast(`Created new product "${name}"`, 'success');
+      UI.showToast(`Created ${name}`, 'success');
     }
 
     UI.closeModal('productFormModal');

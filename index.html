@@ -1,85 +1,428 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nexgenesis — Enterprise Product Admin Dashboard</title>
-  <meta name="description" content="Next-generation product administration, telemetry analytics, and global warehouse inventory management." />
+  <title>Nexgenesis — Product Administration and Telemetry</title>
+  <meta name="description" content="Product catalog operations, fulfillment matrix, and telemetry analytics for Nexgenesis hardware." />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
-  <div class="app-layout">
-    <!-- Sidebar Navigation -->
+  <!-- ========================================================================= -->
+  <!-- 1. LANDING PAGE VIEW -->
+  <!-- ========================================================================= -->
+  <div id="landingView" class="landing-view active">
+    <!-- Site Navigation -->
+    <header class="site-header">
+      <div class="container">
+        <nav class="site-nav" aria-label="Main Navigation">
+          <a href="#landing" class="site-brand">
+            <span>Nexgenesis</span>
+            <span class="site-brand-tag">Operations</span>
+          </a>
+          <ul class="nav-links-group">
+            <li><a href="#landing-hardware">Hardware Line</a></li>
+            <li><a href="#landing-logistics">Fulfillment Hubs</a></li>
+            <li><a href="#terms">Terms</a></li>
+            <li><a href="#privacy">Privacy</a></li>
+          </ul>
+          <div style="display:flex; align-items:center; gap:var(--space-xs);">
+            <a href="#login" class="btn btn-secondary btn-sm" id="landingLoginNavBtn">Sign In</a>
+            <a href="#app/dashboard" class="btn btn-primary btn-sm">Launch Console</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="landing-hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="disclosure-tag">Version 2.4 Production</span>
+              <span class="disclosure-tag">Simulated demonstration data</span>
+            </div>
+            <h1 class="hero-headline">Hardware product operations and inventory telemetry.</h1>
+            <p class="hero-subhead">
+              Nexgenesis coordinates manufacturing batches, regional warehouse allocation, and sales velocity across global distribution channels from a single operating console.
+            </p>
+            <div class="hero-actions">
+              <a href="#app/dashboard" class="btn btn-primary btn-lg">Open Product Console</a>
+              <a href="#landing-hardware" class="btn btn-secondary btn-lg">Review Specifications</a>
+            </div>
+          </div>
+          <div class="hero-visual-frame">
+            <img src="/assets/products/pulse-watch.jpg" alt="Nexgenesis Pulse Ultra Titanium Smartwatch" loading="eager">
+            <div class="hero-caption">Nexgenesis Pulse Ultra: Aerospace Grade 5 titanium with micro-OLED optical cluster.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Line Showcase -->
+    <section class="landing-section" id="landing-hardware">
+      <div class="container">
+        <div class="section-intro">
+          <h2>Engineered Hardware Systems</h2>
+          <p>
+            Physical telemetry controllers, wearable biometric devices, and acoustic systems managed directly within the catalog database.
+          </p>
+        </div>
+
+        <div class="product-showcase-row">
+          <!-- 1. Quantum Hub -->
+          <article class="product-feature-panel">
+            <img src="/assets/products/quantum-hub.jpg" alt="Nexgenesis Quantum Hub">
+            <div class="product-feature-content">
+              <h3>Quantum Hub</h3>
+              <p>Central neural mesh coordinator for local automation routing.</p>
+              <ul class="product-spec-list">
+                <li>Local Matter 2.0 zero-latency execution</li>
+                <li>On-device tensor processing unit</li>
+                <li>Brushed titanium chassis with status ring</li>
+                <li>Standard Price: $349.00 (52.7% margin)</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- 2. Pulse Ultra -->
+          <article class="product-feature-panel">
+            <img src="/assets/products/pulse-watch.jpg" alt="Nexgenesis Pulse Ultra Smartwatch">
+            <div class="product-feature-content">
+              <h3>Pulse Ultra</h3>
+              <p>Continuous biometric sensor array in aerospace titanium.</p>
+              <ul class="product-spec-list">
+                <li>Optical ECG and heart rate variability cluster</li>
+                <li>High brightness micro-OLED panel</li>
+                <li>100-meter waterproof grade housing</li>
+                <li>Standard Price: $499.00 (57.9% margin)</li>
+              </ul>
+            </div>
+          </article>
+
+          <!-- 3. Aura Pro -->
+          <article class="product-feature-panel">
+            <img src="/assets/products/aura-headphones.jpg" alt="Nexgenesis Aura Pro Headphones">
+            <div class="product-feature-content">
+              <h3>Aura Pro</h3>
+              <p>Spatial acoustic headphones with active noise cancellation.</p>
+              <ul class="product-spec-list">
+                <li>45mm custom beryllium dynamic drivers</li>
+                <li>8 adaptive ambient microphones</li>
+                <li>60-hour continuous playback battery</li>
+                <li>Standard Price: $389.00 (60.1% margin)</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Logistics & Hubs Section -->
+    <section class="landing-section" id="landing-logistics">
+      <div class="container">
+        <div class="section-intro">
+          <h2>Global Fulfillment Distribution</h2>
+          <p>
+            Inventory allocations are tracked across three primary regional hubs to maintain stock availability and predict restock cadences.
+          </p>
+        </div>
+
+        <div class="metrics-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Fulfillment Hub</th>
+                <th>Region</th>
+                <th>Active SKU Count</th>
+                <th>Asset Valuation</th>
+                <th>Operational Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>North America Primary Hub (NA-East)</strong></td>
+                <td>North America</td>
+                <td>8 SKUs</td>
+                <td>$82,400</td>
+                <td><span class="badge badge-in-stock">Nominal</span></td>
+              </tr>
+              <tr>
+                <td><strong>European Logistics Center (EU-Central)</strong></td>
+                <td>Europe</td>
+                <td>8 SKUs</td>
+                <td>$43,820</td>
+                <td><span class="badge badge-in-stock">Nominal</span></td>
+              </tr>
+              <tr>
+                <td><strong>Asia-Pacific Distribution Hub (APAC-Tokyo)</strong></td>
+                <td>Asia-Pacific</td>
+                <td>8 SKUs</td>
+                <td>$22,000</td>
+                <td><span class="badge badge-low-stock">Replenishment Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-content">
+          <div>
+            <strong style="color:var(--text-primary); font-size:0.95rem;">Nexgenesis Operations</strong>
+            <p style="font-size:0.8125rem; color:var(--text-muted); margin-top:2px;">
+              Enterprise hardware lifecycle management and inventory coordination.
+            </p>
+          </div>
+          <ul class="footer-legal-links">
+            <li><a href="#terms">Terms of Service</a></li>
+            <li><a href="#privacy">Privacy Policy</a></li>
+            <li><a href="#login">Operator Login</a></li>
+            <li><a href="#app/dashboard">Console</a></li>
+          </ul>
+        </div>
+        <div style="margin-top:var(--space-md); padding-top:var(--space-md); border-top:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <span class="footer-copyright">Copyright © 2026 Nexgenesis Technologies Inc. All rights reserved.</span>
+          <span class="disclosure-tag">Simulated demonstration environment</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. LOGIN PAGE VIEW -->
+  <!-- ========================================================================= -->
+  <div id="loginView" class="login-view">
+    <div class="login-box">
+      <div class="login-header">
+        <a href="#landing" style="text-decoration:none; font-weight:700; color:var(--text-primary); font-size:1.1rem;">Nexgenesis</a>
+        <h2>Console Sign In</h2>
+        <p>Enter your operational credentials to access product catalog controls and warehouse telemetry.</p>
+      </div>
+
+      <div class="login-demo-notice">
+        <strong>Demo Account Available:</strong>
+        <div style="margin-top:4px;">Email: <code>alex.vance@nexgenesis.internal</code></div>
+        <div>Password: <code>demo-pass</code></div>
+      </div>
+
+      <form id="loginForm" class="login-form">
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Work Email</label>
+          <input type="email" class="form-input" id="loginEmail" value="alex.vance@nexgenesis.internal" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label class="form-label" for="loginPassword">Password</label>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Required</span>
+          </div>
+          <input type="password" class="form-input" id="loginPassword" value="demo-pass" required autocomplete="current-password">
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <label class="checkbox-label">
+            <input type="checkbox" id="loginRememberMe" checked>
+            <span>Remember workstation</span>
+          </label>
+        </div>
+
+        <div id="loginErrorMsg" class="form-error-msg"></div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:4px;">Sign In to Console</button>
+        <button type="button" class="btn btn-secondary" id="loginDemoBtn" style="width:100%;">Sign in with Demo Account</button>
+      </form>
+
+      <div class="login-footer-links">
+        <a href="#landing">Back to overview</a>
+        <div style="display:flex; gap:12px;">
+          <a href="#terms">Terms</a>
+          <a href="#privacy">Privacy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. LEGAL: TERMS OF SERVICE VIEW -->
+  <!-- ========================================================================= -->
+  <div id="legalTermsView" class="legal-view">
+    <header class="site-header">
+      <div class="container">
+        <nav class="site-nav">
+          <a href="#landing" class="site-brand">
+            <span>Nexgenesis</span>
+            <span class="site-brand-tag">Legal</span>
+          </a>
+          <div style="display:flex; gap:var(--space-xs);">
+            <a href="#landing" class="btn btn-secondary btn-sm">Return Home</a>
+            <a href="#login" class="btn btn-primary btn-sm">Sign In</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="legal-content-container">
+        <div class="legal-draft-banner">
+          <strong>Draft for Legal Review:</strong> The terms outlined below represent standard operational policies for Nexgenesis enterprise hardware coordination as of September 2026.
+        </div>
+
+        <article class="legal-article">
+          <h1>Terms of Service</h1>
+          <span class="last-updated">Last Modified: September 23, 2026</span>
+
+          <h2>1. Purpose and Operational Scope</h2>
+          <p>
+            The Nexgenesis Product Administration Console provides authorized personnel with centralized tools to manage hardware product specifications, regional warehouse allocation, and pricing rules. Access is restricted to designated operators, distribution partners, and engineering teams.
+          </p>
+
+          <h2>2. User Accounts and Security</h2>
+          <p>
+            Users must maintain the confidentiality of administrative credentials. Operational actions, including catalog adjustments, pricing updates, and inventory transfers, are recorded in the audit trail with user identity timestamps.
+          </p>
+
+          <h2>3. Catalog Data and Accuracy</h2>
+          <p>
+            Product data published through this system must adhere to engineering tolerances and regional compliance guidelines. Demonstration metrics and prototype listings are marked accordingly within the catalog interface.
+          </p>
+
+          <h2>4. Data Portability and Backups</h2>
+          <p>
+            Authorized administrators may export catalog records in structured CSV or JSON formats. Imported files must validate against the official catalog schema prior to database application.
+          </p>
+
+          <h2>5. Disclaimers and Limitations</h2>
+          <p>
+            This software is provided for administrative coordination purposes. Simulated performance metrics, margin projections, and inventory velocity indicators represent mathematical models based on historical telemetry.
+          </p>
+        </article>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="footer-copyright">Copyright © 2026 Nexgenesis Technologies Inc.</span>
+          <a href="#privacy">Privacy Policy</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. LEGAL: PRIVACY POLICY VIEW -->
+  <!-- ========================================================================= -->
+  <div id="legalPrivacyView" class="legal-view">
+    <header class="site-header">
+      <div class="container">
+        <nav class="site-nav">
+          <a href="#landing" class="site-brand">
+            <span>Nexgenesis</span>
+            <span class="site-brand-tag">Privacy</span>
+          </a>
+          <div style="display:flex; gap:var(--space-xs);">
+            <a href="#landing" class="btn btn-secondary btn-sm">Return Home</a>
+            <a href="#login" class="btn btn-primary btn-sm">Sign In</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="legal-content-container">
+        <div class="legal-draft-banner">
+          <strong>Draft for Legal Review:</strong> This privacy disclosure specifies data collection and storage practices within the Nexgenesis administration console.
+        </div>
+
+        <article class="legal-article">
+          <h1>Privacy Policy</h1>
+          <span class="last-updated">Last Modified: September 23, 2026</span>
+
+          <h2>1. Information Collected</h2>
+          <p>
+            Within the administration environment, we collect operator email addresses, role permissions, session identifiers, and workstation timestamps to safeguard catalog operations and verify data provenance.
+          </p>
+
+          <h2>2. Local Storage and Client-Side Persistence</h2>
+          <p>
+            This application uses browser local storage (`localStorage`) to preserve catalog modifications, draft products, UI preferences, and authentication sessions across workstation reloads. Local storage entries may be erased at any time through the Settings panel.
+          </p>
+
+          <h2>3. Telemetry and Audit Records</h2>
+          <p>
+            System modifications such as price adjustments, purchase order issuances, and product deletions generate structured log entries to preserve inventory accountability.
+          </p>
+
+          <h2>4. Third Party Disclosures</h2>
+          <p>
+            Administrative telemetry is not sold or distributed to third party advertising networks. Operational data remains confined to internal logistics coordinators and distribution endpoints.
+          </p>
+        </article>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="footer-copyright">Copyright © 2026 Nexgenesis Technologies Inc.</span>
+          <a href="#terms">Terms of Service</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5. MAIN DASHBOARD APPLICATION VIEW -->
+  <!-- ========================================================================= -->
+  <div id="appView" class="app-view">
+    <!-- Sidebar -->
     <aside class="app-sidebar" id="appSidebar">
       <div class="sidebar-header">
-        <a href="#" class="brand-wrapper" id="brandLink">
-          <div class="brand-icon">
-            <img src="/favicon.svg" alt="Nexgenesis Logo">
-          </div>
-          <div class="brand-info">
-            <span class="brand-title">NEXGENESIS</span>
-            <span class="brand-badge">PRODUCT OS v2.4</span>
-          </div>
+        <a href="#app/dashboard" style="text-decoration:none; font-weight:700; color:var(--text-primary); font-size:1.05rem;">
+          Nexgenesis
         </a>
-        <button class="sidebar-toggle-btn" id="toggleSidebarBtn" title="Toggle Sidebar (⌘B)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="9" y1="3" x2="9" y2="21"></line>
-            <path d="M15 9l-3 3 3 3"></path>
-          </svg>
-        </button>
+        <span class="site-brand-tag">v2.4</span>
       </div>
 
       <div class="sidebar-nav-container">
-        <span class="nav-section-label">Core Operations</span>
-        <a href="#dashboard" class="nav-link active" data-view="dashboard">
-          <span class="nav-icon">📊</span>
-          <span class="nav-label">Dashboard</span>
+        <span class="nav-section-label">Operations</span>
+        <a href="#app/dashboard" class="nav-link active" data-dash-view="dashboard">
+          <span>Dashboard</span>
         </a>
-        <a href="#products" class="nav-link" data-view="products">
-          <span class="nav-icon">📦</span>
-          <span class="nav-label">Product Catalog</span>
-          <span class="nav-counter" id="sidebarProductsCount">8</span>
+        <a href="#app/products" class="nav-link" data-dash-view="products">
+          <span>Product Catalog</span>
+          <span class="badge" id="sidebarProductsCount">8</span>
         </a>
-        <a href="#inventory" class="nav-link" data-view="inventory">
-          <span class="nav-icon">📋</span>
-          <span class="nav-label">Inventory & Hubs</span>
-          <span class="nav-counter alert" id="sidebarStockAlertsCount">2</span>
+        <a href="#app/inventory" class="nav-link" data-dash-view="inventory">
+          <span>Inventory and Hubs</span>
+          <span class="badge badge-low-stock" id="sidebarStockAlertsCount">2</span>
         </a>
 
         <span class="nav-section-label">Intelligence</span>
-        <a href="#analytics" class="nav-link" data-view="analytics">
-          <span class="nav-icon">📈</span>
-          <span class="nav-label">Sales Analytics</span>
+        <a href="#app/analytics" class="nav-link" data-dash-view="analytics">
+          <span>Sales Analytics</span>
         </a>
-        <a href="#reviews" class="nav-link" data-view="reviews">
-          <span class="nav-icon">⭐</span>
-          <span class="nav-label">Customer Reviews</span>
+        <a href="#app/reviews" class="nav-link" data-dash-view="reviews">
+          <span>Customer Reviews</span>
         </a>
 
-        <span class="nav-section-label">Administration</span>
-        <a href="#settings" class="nav-link" data-view="settings">
-          <span class="nav-icon">⚙️</span>
-          <span class="nav-label">Settings & Backup</span>
+        <span class="nav-section-label">System</span>
+        <a href="#app/settings" class="nav-link" data-dash-view="settings">
+          <span>Settings and Backup</span>
         </a>
       </div>
 
       <div class="sidebar-footer">
-        <div class="sidebar-storage-card">
-          <div class="storage-header">
-            <span>Global Edge Nodes</span>
-            <span style="color:var(--color-emerald); font-weight:700;">Operational</span>
-          </div>
-          <div class="progress-bar-container" style="height:4px;">
-            <div class="progress-bar-fill progress-emerald" style="width: 98%;"></div>
-          </div>
-          <div style="font-size:0.6875rem; color:var(--text-muted); display:flex; justify-content:space-between;">
-            <span>Latency: 14ms</span>
-            <span>Matter 2.0</span>
-          </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span id="appSidebarUserName" style="font-weight:600; color:var(--text-primary);">Alex Vance</span>
+          <button class="btn btn-outline btn-sm" id="sidebarLogoutBtn" style="padding:2px 6px; font-size:0.75rem;">Sign Out</button>
         </div>
+        <span id="appSidebarUserRole" style="font-size:0.725rem; color:var(--text-muted);">Operations Lead</span>
       </div>
     </aside>
 
@@ -87,30 +430,16 @@
     <div class="app-wrapper">
       <!-- Header -->
       <header class="app-header">
-        <div class="header-left">
-          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open Mobile Menu">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-          </button>
-
-          <!-- Global Search -->
-          <div class="global-search">
-            <div class="search-input-wrapper">
-              <span class="search-icon">🔍</span>
-              <input type="text" class="search-input" id="globalSearchInput" placeholder="Quick search product, SKU, tag... (/)" autocomplete="off">
-              <kbd class="search-shortcut">⌘K</kbd>
-            </div>
-            <div id="globalSearchDropdown" class="card" style="display:none; position:absolute; top:48px; left:0; right:0; z-index:var(--z-tooltip); padding:0; max-height:360px; overflow-y:auto; box-shadow:var(--shadow-lg);"></div>
-          </div>
+        <div class="header-search">
+          <input type="text" class="form-input" id="globalSearchInput" placeholder="Search product or SKU... (/)" autocomplete="off">
+          <div id="globalSearchDropdown" class="card" style="display:none; position:absolute; top:42px; left:0; right:0; z-index:var(--z-drawer); padding:0; max-height:300px; overflow-y:auto; box-shadow:var(--shadow-md);"></div>
         </div>
 
         <div class="header-right">
           <!-- Currency Selector -->
-          <div class="currency-selector">
-            <select class="currency-select" id="currencySelector" aria-label="Currency Selector">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <label for="currencySelector" style="font-size:0.8125rem; color:var(--text-muted);">Currency:</label>
+            <select class="form-select" id="currencySelector" style="width:auto; padding:4px 8px; font-size:0.8125rem;">
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
               <option value="GBP">GBP (£)</option>
@@ -118,179 +447,75 @@
             </select>
           </div>
 
-          <!-- Theme Toggle -->
-          <button class="icon-btn" id="themeToggleBtn" title="Switch Theme (Dark / Light / Midnight)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5"></circle>
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-          </button>
-
-          <!-- New Product Quick Action -->
-          <button class="btn btn-primary btn-sm" id="newProductBtn">
-            <span>+</span> New Product
-          </button>
-
-          <!-- Admin Profile Pill -->
-          <div class="admin-profile-pill">
-            <div class="admin-avatar-wrapper">
-              <div class="admin-avatar">AV</div>
-              <div class="admin-online-badge"></div>
-            </div>
-            <div class="admin-details">
-              <span class="admin-name">Alex Vance</span>
-              <span class="admin-role">Super Admin</span>
-            </div>
-          </div>
+          <button class="btn btn-primary btn-sm" id="newProductBtn">+ Add Product</button>
+          <a href="#landing" class="btn btn-secondary btn-sm" title="View Public Landing Page">Landing Page</a>
         </div>
       </header>
 
-      <!-- Main Content Container -->
+      <!-- Main Section Container -->
       <main class="app-main">
-        <!-- 1. VIEW: DASHBOARD -->
-        <section class="view-section active" id="view-dashboard">
-          <!-- Section Header -->
-          <div class="section-header">
-            <div class="section-header-titles">
+        <!-- 5.1 DASHBOARD VIEW -->
+        <section class="dash-view-section active" id="dash-dashboard">
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:8px;">
+            <div>
               <h1>Product Operations Dashboard</h1>
-              <p>Live inventory valuations, sales velocity, and global telemetry overview.</p>
+              <p>Real-time valuation, sales velocity, and regional stock overview.</p>
             </div>
-            <div class="section-header-actions">
-              <button class="btn btn-secondary btn-sm" id="exportCsvBtnDashboard" onclick="document.getElementById('exportCsvBtn').click()">
-                <span>📥</span> Export CSV
-              </button>
-              <button class="btn btn-primary btn-sm" onclick="document.getElementById('newProductBtn').click()">
-                <span>+</span> Add Product
-              </button>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="disclosure-tag">Simulated demonstration data</span>
+              <button class="btn btn-secondary btn-sm" id="dashExportCsvBtn">Export CSV</button>
             </div>
           </div>
 
-          <!-- KPI Metrics Cards Grid -->
-          <div class="kpi-grid">
-            <!-- 1. Total Revenue -->
-            <div class="kpi-card">
-              <div class="kpi-header">
-                <span class="kpi-title">Catalog Revenue</span>
-                <div class="kpi-icon-badge" style="background:rgba(99, 102, 241, 0.15); color:var(--color-primary);">
-                  💰
-                </div>
-              </div>
-              <div class="kpi-value-row">
-                <span class="kpi-value" id="kpiTotalRevenue">$3,681,880</span>
-                <span class="kpi-trend positive">↑ 22.4%</span>
-              </div>
-              <div class="kpi-footer">
-                <span>vs last 30 days</span>
-                <svg class="kpi-sparkline" id="sparklineRevenue"></svg>
-              </div>
+          <!-- Stat Panels Grid -->
+          <div class="stat-panel-grid">
+            <div class="stat-panel">
+              <span class="stat-label">Catalog Sales Revenue</span>
+              <span class="stat-value" id="kpiTotalRevenue">$3,681,880</span>
+              <div class="stat-context"><span class="stat-trend">+22.4%</span> across active SKUs</div>
+              <svg id="sparklineRevenue" style="width:80px; height:24px; margin-top:4px;"></svg>
             </div>
 
-            <!-- 2. Inventory Valuation -->
-            <div class="kpi-card">
-              <div class="kpi-header">
-                <span class="kpi-title">Stock Valuation</span>
-                <div class="kpi-icon-badge" style="background:rgba(6, 182, 212, 0.15); color:var(--color-accent);">
-                  🏢
-                </div>
-              </div>
-              <div class="kpi-value-row">
-                <span class="kpi-value" id="kpiInventoryValuation">$148,220</span>
-                <span class="kpi-trend positive">↑ 8.6%</span>
-              </div>
-              <div class="kpi-footer">
-                <span>Across 3 global hubs</span>
-                <svg class="kpi-sparkline" id="sparklineValuation"></svg>
-              </div>
+            <div class="stat-panel">
+              <span class="stat-label">Inventory Asset Valuation</span>
+              <span class="stat-value" id="kpiInventoryValuation">$148,220</span>
+              <div class="stat-context">Allocated across 3 regional hubs</div>
+              <svg id="sparklineValuation" style="width:80px; height:24px; margin-top:4px;"></svg>
             </div>
 
-            <!-- 3. Active Catalog -->
-            <div class="kpi-card">
-              <div class="kpi-header">
-                <span class="kpi-title">Active Products</span>
-                <div class="kpi-icon-badge" style="background:rgba(16, 185, 129, 0.15); color:var(--color-emerald);">
-                  📦
-                </div>
-              </div>
-              <div class="kpi-value-row">
-                <span class="kpi-value" id="kpiActiveProducts">7 / 8</span>
-                <span class="kpi-trend positive">87.5%</span>
-              </div>
-              <div class="kpi-footer">
-                <span>1 product in draft status</span>
-                <span style="color:var(--color-emerald); font-weight:600;">Optimal</span>
-              </div>
+            <div class="stat-panel">
+              <span class="stat-label">Active Catalog Records</span>
+              <span class="stat-value" id="kpiActiveProducts">7 / 8</span>
+              <div class="stat-context">1 draft awaiting publication</div>
             </div>
 
-            <!-- 4. Critical Stock Alerts -->
-            <div class="kpi-card">
-              <div class="kpi-header">
-                <span class="kpi-title">Stock Alerts</span>
-                <div class="kpi-icon-badge" style="background:rgba(244, 63, 94, 0.15); color:var(--color-rose);">
-                  ⚠️
-                </div>
-              </div>
-              <div class="kpi-value-row">
-                <span class="kpi-value" id="kpiLowStockAlerts" style="color:var(--color-amber);">2</span>
-                <span class="kpi-trend negative">Urgent</span>
-              </div>
-              <div class="kpi-footer">
-                <span>Requires reorder purchase</span>
-                <svg class="kpi-sparkline" id="sparklineStock"></svg>
-              </div>
+            <div class="stat-panel">
+              <span class="stat-label">Replenishment Alerts</span>
+              <span class="stat-value" id="kpiLowStockAlerts" style="color:var(--color-warning);">2</span>
+              <div class="stat-context">Items below threshold</div>
+              <svg id="sparklineStock" style="width:80px; height:24px; margin-top:4px;"></svg>
             </div>
 
-            <!-- 5. Average Profit Margin -->
-            <div class="kpi-card">
-              <div class="kpi-header">
-                <span class="kpi-title">Avg Profit Margin</span>
-                <div class="kpi-icon-badge" style="background:rgba(139, 92, 246, 0.15); color:var(--color-violet);">
-                  📊
-                </div>
-              </div>
-              <div class="kpi-value-row">
-                <span class="kpi-value" id="kpiAvgMargin">58.9%</span>
-                <span class="kpi-trend positive">Target: >50%</span>
-              </div>
-              <div class="kpi-footer">
-                <span>Net margin after COGS</span>
-                <span style="color:var(--color-primary); font-weight:600;">High Tier</span>
-              </div>
+            <div class="stat-panel">
+              <span class="stat-label">Average Profit Margin</span>
+              <span class="stat-value" id="kpiAvgMargin">58.9%</span>
+              <div class="stat-context">Calculated against COGS</div>
             </div>
 
-            <!-- 6. Customer Satisfaction CSAT -->
-            <div class="kpi-card">
-              <div class="kpi-header">
-                <span class="kpi-title">Product CSAT</span>
-                <div class="kpi-icon-badge" style="background:rgba(245, 158, 11, 0.15); color:var(--color-amber);">
-                  ⭐
-                </div>
-              </div>
-              <div class="kpi-value-row">
-                <span class="kpi-value" id="kpiCsatScore">4.90 / 5.0</span>
-                <span class="kpi-trend positive">98% Positive</span>
-              </div>
-              <div class="kpi-footer">
-                <span>Verified buyers only</span>
-                <span style="color:var(--color-amber); font-weight:600;">★★★★★</span>
-              </div>
+            <div class="stat-panel">
+              <span class="stat-label">Product CSAT Rating</span>
+              <span class="stat-value" id="kpiCsatScore">4.90 / 5.0</span>
+              <div class="stat-context">From verified purchases</div>
             </div>
           </div>
 
-          <!-- Charts Section Grid -->
-          <div class="chart-grid-double" style="display:grid; grid-template-columns: 2fr 1fr; gap:var(--space-lg);">
-            <!-- Area Chart -->
+          <!-- Charts Grid -->
+          <div class="chart-grid-double" style="display:grid; grid-template-columns: 2fr 1fr; gap:var(--space-md);">
             <div class="chart-card">
               <div class="chart-header">
                 <div class="chart-title-group">
-                  <h3 class="chart-title">Sales Revenue Velocity</h3>
-                  <span class="chart-subtitle">Dynamic performance tracking across selected time windows</span>
+                  <h3 class="chart-title">Revenue Trajectory</h3>
+                  <span class="chart-subtitle">Sales volume over selected monitoring interval</span>
                 </div>
                 <div class="chart-filters">
                   <button class="chart-filter-btn" data-range="7D">7D</button>
@@ -302,77 +527,61 @@
               <div class="svg-chart-container" id="revenueAreaChartContainer"></div>
             </div>
 
-            <!-- Category Donut Chart -->
             <div class="chart-card">
               <div class="chart-header">
                 <div class="chart-title-group">
-                  <h3 class="chart-title">Revenue by Category</h3>
-                  <span class="chart-subtitle">Distribution across product lines</span>
+                  <h3 class="chart-title">Category Revenue</h3>
+                  <span class="chart-subtitle">Distribution by hardware category</span>
                 </div>
               </div>
               <div id="categoryDonutChartContainer"></div>
             </div>
           </div>
 
-          <!-- Bottom Grid: Top Sellers & Audit Trail -->
-          <div class="chart-grid-double" style="display:grid; grid-template-columns: 1.5fr 1fr; gap:var(--space-lg);">
-            <!-- Top Sellers -->
+          <!-- Top Sellers & Audit Activity -->
+          <div class="chart-grid-double" style="display:grid; grid-template-columns: 1.5fr 1fr; gap:var(--space-md);">
             <div class="card">
-              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--space-md);">
-                <div>
-                  <h3 style="font-size:1.1rem; color:var(--text-primary);">Top Best-Selling Hardware</h3>
-                  <p style="font-size:0.8rem; color:var(--text-muted);">Ranked by gross sales volume and customer traction</p>
-                </div>
-                <button class="btn btn-secondary btn-sm" onclick="app.store.setActiveView('products')">View All</button>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-sm);">
+                <h3 style="font-size:1rem;">Top Best-Selling Products</h3>
+                <button class="btn btn-secondary btn-sm" onclick="app.store.setDashboardView('products')">View All</button>
               </div>
-              <div id="topSellersList" style="display:flex; flex-direction:column; gap:var(--space-xs);"></div>
+              <div id="topSellersList" style="display:flex; flex-direction:column; gap:6px;"></div>
             </div>
 
-            <!-- Audit Trail -->
             <div class="card">
-              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--space-md);">
-                <div>
-                  <h3 style="font-size:1.1rem; color:var(--text-primary);">Telemetry & Audit Trail</h3>
-                  <p style="font-size:0.8rem; color:var(--text-muted);">Real-time admin actions & catalog events</p>
-                </div>
-                <span class="badge badge-published"><span class="badge-dot-indicator"></span>Live</span>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-sm);">
+                <h3 style="font-size:1rem;">Recent Operational Logs</h3>
+                <span class="badge badge-published">Live</span>
               </div>
-              <div id="recentActivityList" style="display:flex; flex-direction:column; gap:var(--space-sm);"></div>
+              <div id="recentActivityList" style="display:flex; flex-direction:column; gap:8px;"></div>
             </div>
           </div>
         </section>
 
-        <!-- 2. VIEW: PRODUCTS CATALOG -->
-        <section class="view-section" id="view-products">
-          <div class="section-header">
-            <div class="section-header-titles">
+        <!-- 5.2 PRODUCTS CATALOG VIEW -->
+        <section class="dash-view-section" id="dash-products" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:8px;">
+            <div>
               <h1>Product Catalog Management</h1>
-              <p>Configure pricing, SKU barcodes, inventory allocations, variants, and SEO meta.</p>
+              <p>Configure pricing, SKU codes, stock quantities, and descriptions.</p>
             </div>
-            <div class="section-header-actions">
-              <button class="btn btn-primary" onclick="app.productManager.openCreateModal()">
-                <span>+</span> Add New Product
-              </button>
-            </div>
+            <button class="btn btn-primary btn-sm" onclick="app.productManager.openCreateModal()">+ Add Product</button>
           </div>
 
-          <!-- Filters & Search Toolbar -->
-          <div class="card" style="padding:var(--space-md); display:flex; flex-direction:column; gap:var(--space-md);">
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:var(--space-md);">
-              <!-- Search & Filters -->
-              <div style="display:flex; align-items:center; flex-wrap:wrap; gap:var(--space-sm); flex:1;">
-                <div style="min-width:240px; flex:1;">
-                  <input type="text" class="form-input" id="productSearchInput" placeholder="Filter by product name, SKU, or tags...">
-                </div>
+          <!-- Toolbar -->
+          <div class="card" style="padding:var(--space-sm); display:flex; flex-direction:column; gap:var(--space-sm);">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:var(--space-xs);">
+              <div style="display:flex; align-items:center; flex-wrap:wrap; gap:var(--space-xs); flex:1;">
+                <input type="text" class="form-input" id="productSearchInput" placeholder="Filter by title, SKU, or tag..." style="min-width:220px; flex:1;">
 
                 <select class="form-select" id="productCategoryFilter" style="width:auto;">
                   <option value="all">All Categories</option>
-                  <option value="smart-hub">Smart Home & IoT</option>
+                  <option value="smart-hub">Smart Home & Hubs</option>
                   <option value="wearables">Wearables & Biometrics</option>
-                  <option value="audio">Spatial Audio</option>
-                  <option value="ar-vision">Augmented Reality</option>
-                  <option value="ai-hardware">AI & Neural Nodes</option>
-                  <option value="accessories">Accessories & Power</option>
+                  <option value="audio">Acoustics & Audio</option>
+                  <option value="ar-vision">Optical & AR Systems</option>
+                  <option value="ai-hardware">Edge Inference Accelerators</option>
+                  <option value="accessories">Power & Accessories</option>
                 </select>
 
                 <select class="form-select" id="productStatusFilter" style="width:auto;">
@@ -383,10 +592,10 @@
                 </select>
 
                 <select class="form-select" id="productStockFilter" style="width:auto;">
-                  <option value="all">All Stock Levels</option>
+                  <option value="all">All Inventory</option>
                   <option value="in-stock">In Stock</option>
                   <option value="low-stock">Low Stock (≤15)</option>
-                  <option value="out-of-stock">Out of Stock</option>
+                  <option value="out-of-stock">Depleted</option>
                 </select>
 
                 <select class="form-select" id="productSortSelect" style="width:auto;">
@@ -395,30 +604,23 @@
                   <option value="price-desc">Price: High to Low</option>
                   <option value="price-asc">Price: Low to High</option>
                   <option value="stock-desc">Stock: High to Low</option>
-                  <option value="stock-asc">Stock: Low to High</option>
                   <option value="sales-desc">Top Sales</option>
-                  <option value="rating-desc">Highest Rated</option>
                 </select>
               </div>
 
-              <!-- View Switcher -->
-              <div style="display:flex; align-items:center; gap:var(--space-2xs); background:var(--bg-input); padding:2px; border-radius:var(--radius-md);">
-                <button class="btn btn-sm active" id="viewTableBtn" title="Table View" style="padding:6px 10px;">
-                  📋 Table
-                </button>
-                <button class="btn btn-sm" id="viewGridBtn" title="Grid View" style="padding:6px 10px;">
-                  🗂️ Grid
-                </button>
+              <div style="display:flex; gap:2px; background:var(--bg-subtle); padding:2px; border-radius:var(--radius-xs);">
+                <button class="btn btn-sm btn-secondary active" id="viewTableBtn">Table</button>
+                <button class="btn btn-sm btn-secondary" id="viewGridBtn">Grid</button>
               </div>
             </div>
 
-            <!-- Floating Bulk Actions Bar -->
-            <div id="bulkActionsBar" style="display:none; align-items:center; justify-content:space-between; padding:10px 16px; background:var(--bg-card-subtle); border:1px solid var(--border-focus); border-radius:var(--radius-md);">
+            <!-- Bulk Actions -->
+            <div id="bulkActionsBar" style="display:none; align-items:center; justify-content:space-between; padding:8px 12px; background:var(--bg-subtle); border:1px solid var(--border-default); border-radius:var(--radius-xs);">
               <div style="display:flex; align-items:center; gap:8px;">
-                <span class="badge badge-published" id="bulkSelectedCount">0</span>
-                <span style="font-size:0.875rem; font-weight:600; color:var(--text-primary);">products selected</span>
+                <span class="badge" id="bulkSelectedCount">0</span>
+                <span style="font-size:0.85rem; font-weight:600;">records selected</span>
               </div>
-              <div style="display:flex; align-items:center; gap:8px;">
+              <div style="display:flex; gap:6px;">
                 <button class="btn btn-secondary btn-sm" id="bulkPublishBtn">Publish</button>
                 <button class="btn btn-secondary btn-sm" id="bulkDraftBtn">Mark Draft</button>
                 <button class="btn btn-danger btn-sm" id="bulkDeleteBtn">Delete</button>
@@ -426,66 +628,52 @@
             </div>
           </div>
 
-          <!-- Table View Container -->
+          <!-- Table View -->
           <div id="productsTableWrapper" class="table-container">
             <table class="data-table">
               <thead>
                 <tr>
-                  <th style="width:40px;">
-                    <input type="checkbox" id="selectAllProducts" style="cursor:pointer; width:16px; height:16px;">
+                  <th style="width:36px;">
+                    <input type="checkbox" id="selectAllProducts" aria-label="Select All Products">
                   </th>
-                  <th>Product</th>
+                  <th>Product / SKU</th>
                   <th>Category</th>
-                  <th>Stock Health</th>
-                  <th>Price & Margin</th>
+                  <th>Stock Level</th>
+                  <th>Retail & Margin</th>
                   <th>Status</th>
                   <th style="text-align:right;">Actions</th>
                 </tr>
               </thead>
-              <tbody id="productsTableBody">
-                <!-- Populated dynamically by ProductManager -->
-              </tbody>
+              <tbody id="productsTableBody"></tbody>
             </table>
 
-            <!-- Pagination Bar -->
-            <div class="pagination-wrapper">
-              <span id="paginationInfo">Showing 1 - 8 of 8 products</span>
-              <div class="pagination-controls" id="paginationControls"></div>
+            <div style="padding:var(--space-sm) var(--space-md); border-top:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center; font-size:0.8125rem; color:var(--text-secondary);">
+              <span id="paginationInfo">Displaying 1 to 8 of 8 products</span>
+              <div id="paginationControls" style="display:flex; gap:4px;"></div>
             </div>
           </div>
 
-          <!-- Grid View Container -->
+          <!-- Grid View -->
           <div id="productsGridWrapper" style="display:none;">
-            <div class="product-grid" id="productsGrid">
-              <!-- Populated dynamically by ProductManager -->
-            </div>
+            <div id="productsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:var(--space-md);"></div>
           </div>
         </section>
 
-        <!-- 3. VIEW: INVENTORY & HUBS -->
-        <section class="view-section" id="view-inventory">
-          <div class="section-header">
-            <div class="section-header-titles">
-              <h1>Global Warehouses & Inventory Matrix</h1>
-              <p>Telemetry tracking across North American, European, and Asia-Pacific distribution fulfillment centers.</p>
+        <!-- 5.3 INVENTORY AND HUBS VIEW -->
+        <section class="dash-view-section" id="dash-inventory" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:8px;">
+            <div>
+              <h1>Regional Warehouse Distribution</h1>
+              <p>Inventory allocation across North American, European, and Asia-Pacific fulfillment centers.</p>
             </div>
-            <div class="section-header-actions">
-              <button class="btn btn-primary" id="triggerRestockModalBtn">
-                <span>📦</span> Create Restock PO
-              </button>
-            </div>
+            <button class="btn btn-primary btn-sm" id="triggerRestockModalBtn">Generate Purchase Order</button>
           </div>
 
-          <!-- Critical Low Stock Alerts -->
-          <div class="card" style="display:flex; flex-direction:column; gap:var(--space-md);">
-            <div style="display:flex; align-items:center; justify-content:space-between;">
-              <h3 style="font-size:1.1rem; color:var(--text-primary);">Critical Stock Replenishment Alerts</h3>
-              <span class="badge badge-low-stock">Action Required</span>
-            </div>
-            <div id="criticalAlertsList" style="display:flex; flex-direction:column; gap:var(--space-xs);"></div>
+          <div class="card" style="display:flex; flex-direction:column; gap:var(--space-xs);">
+            <h3 style="font-size:0.95rem;">Critical Replenishment Thresholds</h3>
+            <div id="criticalAlertsList" style="display:flex; flex-direction:column; gap:6px; margin-top:4px;"></div>
           </div>
 
-          <!-- Full Warehouse Allocation Matrix -->
           <div class="table-container">
             <table class="data-table">
               <thead>
@@ -495,142 +683,119 @@
                   <th>North America Hub</th>
                   <th>European Hub</th>
                   <th>Asia-Pacific Hub</th>
-                  <th>Asset Valuation</th>
-                  <th style="text-align:right;">Replenish</th>
+                  <th>Inventory Value</th>
+                  <th style="text-align:right;">Action</th>
                 </tr>
               </thead>
-              <tbody id="inventoryTableBody">
-                <!-- Populated dynamically by InventoryManager -->
-              </tbody>
+              <tbody id="inventoryTableBody"></tbody>
             </table>
           </div>
         </section>
 
-        <!-- 4. VIEW: SALES ANALYTICS -->
-        <section class="view-section" id="view-analytics">
-          <div class="section-header">
-            <div class="section-header-titles">
-              <h1>In-Depth Sales & Margin Analytics</h1>
-              <p>Historical trends, profitability distribution, and unit movement trajectory.</p>
+        <!-- 5.4 SALES ANALYTICS VIEW -->
+        <section class="dash-view-section" id="dash-analytics" style="display:none;">
+          <div>
+            <h1>In-Depth Sales and Margin Analytics</h1>
+            <p>Historical trends, profitability distribution, and unit movement velocity.</p>
+          </div>
+
+          <div class="stat-panel-grid">
+            <div class="stat-panel">
+              <span class="stat-label">Total Orders Handled</span>
+              <span class="stat-value">13,260</span>
+              <span class="stat-context">+18.2% vs previous quarter</span>
+            </div>
+            <div class="stat-panel">
+              <span class="stat-label">Average Order Value (AOV)</span>
+              <span class="stat-value">$277.66</span>
+              <span class="stat-context">Across global hardware bundles</span>
+            </div>
+            <div class="stat-panel">
+              <span class="stat-label">Return and Defect Rate</span>
+              <span class="stat-value" style="color:var(--color-success);">0.34%</span>
+              <span class="stat-context">Below industry standard of 2.1%</span>
+            </div>
+            <div class="stat-panel">
+              <span class="stat-label">Inventory Turnover Rate</span>
+              <span class="stat-value">6.4x</span>
+              <span class="stat-context">Nominal liquidity velocity</span>
             </div>
           </div>
 
-          <!-- Analytics KPI summary -->
-          <div class="kpi-grid">
-            <div class="kpi-card">
-              <span class="kpi-title">Total Orders Fulfilled</span>
-              <span class="kpi-value">13,260</span>
-              <span class="kpi-trend positive">↑ 18.2% vs previous period</span>
-            </div>
-            <div class="kpi-card">
-              <span class="kpi-title">Average Order Value (AOV)</span>
-              <span class="kpi-value">$277.66</span>
-              <span class="kpi-trend positive">↑ $34.20 expansion</span>
-            </div>
-            <div class="kpi-card">
-              <span class="kpi-title">Return & Defect Rate</span>
-              <span class="kpi-value" style="color:var(--color-emerald);">0.34%</span>
-              <span class="kpi-trend positive">Industry Benchmark: 2.1%</span>
-            </div>
-            <div class="kpi-card">
-              <span class="kpi-title">Inventory Turnover Velocity</span>
-              <span class="kpi-value">6.4x</span>
-              <span class="kpi-trend positive">High Liquidity</span>
-            </div>
-          </div>
-
-          <div class="card" style="padding:var(--space-xl); display:flex; flex-direction:column; gap:var(--space-md);">
-            <h3 style="font-size:1.15rem; color:var(--text-primary);">Product Revenue & Margin Performance Matrix</h3>
-            <p style="font-size:0.85rem; color:var(--text-muted);">Real-time profitability ranking across active SKUs.</p>
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:var(--space-md); margin-top:var(--space-sm);">
-              <div style="background:var(--bg-card-subtle); padding:var(--space-lg); border-radius:var(--radius-lg); border:1px solid var(--border-subtle);">
-                <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Flagship Revenue Driver</div>
-                <div style="font-size:1.25rem; font-weight:800; color:var(--text-primary); margin:4px 0;">Nexgenesis Pulse Ultra</div>
-                <div style="font-size:0.875rem; color:var(--color-primary); font-weight:700;">$1,417,160 Total Revenue</div>
-                <div style="font-size:0.75rem; color:var(--color-emerald); margin-top:4px;">57.9% Profit Margin</div>
+          <div class="card" style="display:flex; flex-direction:column; gap:var(--space-md);">
+            <h3 style="font-size:1rem;">Profitability Ranking by SKU</h3>
+            <p style="font-size:0.85rem; color:var(--text-muted);">Real-time breakdown of margin contributions.</p>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:var(--space-md);">
+              <div style="background:var(--bg-subtle); padding:var(--space-md); border-radius:var(--radius-xs); border:1px solid var(--border-subtle);">
+                <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Primary Revenue Driver</div>
+                <div style="font-size:1.1rem; font-weight:700; margin:3px 0;">Nexgenesis Pulse Ultra</div>
+                <div style="font-size:0.875rem; color:var(--color-accent); font-weight:600;">$1,417,160 Gross Sales</div>
+                <div style="font-size:0.75rem; color:var(--color-success); margin-top:2px;">57.9% Profit Margin</div>
               </div>
-              <div style="background:var(--bg-card-subtle); padding:var(--space-lg); border-radius:var(--radius-lg); border:1px solid var(--border-subtle);">
+
+              <div style="background:var(--bg-subtle); padding:var(--space-md); border-radius:var(--radius-xs); border:1px solid var(--border-subtle);">
                 <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Highest Margin Rate</div>
-                <div style="font-size:1.25rem; font-weight:800; color:var(--text-primary); margin:4px 0;">Titanium Link Band</div>
-                <div style="font-size:0.875rem; color:var(--color-emerald); font-weight:700;">68.5% Gross Margin</div>
-                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Low COGS / High Volume</div>
+                <div style="font-size:1.1rem; font-weight:700; margin:3px 0;">Titanium Link Band</div>
+                <div style="font-size:0.875rem; color:var(--color-success); font-weight:600;">68.5% Gross Margin</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Low COGS / High Volume</div>
               </div>
-              <div style="background:var(--bg-card-subtle); padding:var(--space-lg); border-radius:var(--radius-lg); border:1px solid var(--border-subtle);">
-                <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Fastest Selling Node</div>
-                <div style="font-size:1.25rem; font-weight:800; color:var(--text-primary); margin:4px 0;">HyperDock GaN 200W</div>
-                <div style="font-size:0.875rem; color:var(--color-accent); font-weight:700;">3,100 Units Sold</div>
-                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Top accessory attachment rate</div>
+
+              <div style="background:var(--bg-subtle); padding:var(--space-md); border-radius:var(--radius-xs); border:1px solid var(--border-subtle);">
+                <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Fastest Selling Unit</div>
+                <div style="font-size:1.1rem; font-weight:700; margin:3px 0;">HyperDock GaN 200W</div>
+                <div style="font-size:0.875rem; color:var(--color-accent); font-weight:600;">3,100 Units Delivered</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Top accessory attachment rate</div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- 5. VIEW: CUSTOMER REVIEWS -->
-        <section class="view-section" id="view-reviews">
-          <div class="section-header">
-            <div class="section-header-titles">
-              <h1>Verified Customer Feedback & CSAT</h1>
-              <p>Moderate customer reviews, analyze sentiment, and publish official brand replies.</p>
-            </div>
+        <!-- 5.5 CUSTOMER REVIEWS VIEW -->
+        <section class="dash-view-section" id="dash-reviews" style="display:none;">
+          <div>
+            <h1>Customer Reviews and CSAT Telemetry</h1>
+            <p>Verified purchase ratings and official operations responses.</p>
           </div>
 
-          <!-- Reviews Filter Tabs -->
-          <div class="tabs-nav">
-            <button class="tab-btn active review-filter-btn" data-rating="all">All Reviews</button>
-            <button class="tab-btn review-filter-btn" data-rating="5">★★★★★ (5 Stars)</button>
-            <button class="tab-btn review-filter-btn" data-rating="4">★★★★☆ (4 Stars)</button>
-            <button class="tab-btn review-filter-btn" data-rating="3">★★★☆☆ (3 Stars)</button>
+          <div style="display:flex; gap:6px; background:var(--bg-subtle); padding:3px; border-radius:var(--radius-xs); width:fit-content;">
+            <button class="btn btn-sm btn-secondary active review-filter-btn" data-rating="all">All Reviews</button>
+            <button class="btn btn-sm btn-secondary review-filter-btn" data-rating="5">5.0 Stars</button>
+            <button class="btn btn-sm btn-secondary review-filter-btn" data-rating="4">4.0 Stars</button>
           </div>
 
-          <!-- Reviews List Container -->
-          <div id="reviewsListContainer" style="display:flex; flex-direction:column; gap:var(--space-md);">
-            <!-- Populated dynamically by ReviewsManager -->
-          </div>
+          <div id="reviewsListContainer" style="display:flex; flex-direction:column; gap:var(--space-sm);"></div>
         </section>
 
-        <!-- 6. VIEW: SETTINGS & BACKUP -->
-        <section class="view-section" id="view-settings">
-          <div class="section-header">
-            <div class="section-header-titles">
-              <h1>Store Settings & Catalog Backups</h1>
-              <p>Configure telemetry preferences, export CSV/JSON backups, and manage demo state.</p>
-            </div>
+        <!-- 5.6 SETTINGS AND BACKUP VIEW -->
+        <section class="dash-view-section" id="dash-settings" style="display:none;">
+          <div>
+            <h1>System Settings and Data Portability</h1>
+            <p>Export database backups, import catalog records, or reset to demo data.</p>
           </div>
 
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:var(--space-lg);">
-            <!-- Data Export & Import -->
-            <div class="card" style="display:flex; flex-direction:column; gap:var(--space-md);">
-              <h3 style="font-size:1.1rem; color:var(--text-primary);">Data Portability & Backups</h3>
-              <p style="font-size:0.85rem; color:var(--text-muted);">
-                Download your full product database as an Excel-ready CSV or structured JSON system backup.
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:var(--space-md);">
+            <div class="card" style="display:flex; flex-direction:column; gap:var(--space-sm);">
+              <h3 style="font-size:1rem;">Data Portability</h3>
+              <p style="font-size:0.8125rem; color:var(--text-secondary);">
+                Download current product records for spreadsheet processing or structured system backups.
               </p>
-              <div style="display:flex; flex-direction:column; gap:var(--space-sm); margin-top:var(--space-xs);">
-                <button class="btn btn-secondary" id="exportCsvBtn" style="justify-content:flex-start;">
-                  <span>📥</span> Download Full Catalog (CSV)
-                </button>
-                <button class="btn btn-secondary" id="exportJsonBtn" style="justify-content:flex-start;">
-                  <span>💾</span> Export Complete System Backup (JSON)
-                </button>
-
-                <div style="margin-top:var(--space-xs);">
-                  <label class="btn btn-outline" style="width:100%; justify-content:flex-start; cursor:pointer;">
-                    <span>📤</span> Import Catalog Backup (JSON)
-                    <input type="file" id="importFileInput" accept=".json" style="display:none;">
-                  </label>
-                </div>
+              <div style="display:flex; flex-direction:column; gap:var(--space-xs); margin-top:var(--space-xs);">
+                <button class="btn btn-secondary" id="exportCsvBtn" style="justify-content:flex-start;">Export Catalog (CSV)</button>
+                <button class="btn btn-secondary" id="exportJsonBtn" style="justify-content:flex-start;">Export Backup (JSON)</button>
+                <label class="btn btn-outline" style="justify-content:flex-start; cursor:pointer;">
+                  Import Backup (JSON)
+                  <input type="file" id="importFileInput" accept=".json" style="display:none;">
+                </label>
               </div>
             </div>
 
-            <!-- Demo Reset -->
-            <div class="card" style="display:flex; flex-direction:column; gap:var(--space-md); border-color:rgba(244, 63, 94, 0.2);">
-              <h3 style="font-size:1.1rem; color:var(--color-rose);">Danger Zone & Factory Reset</h3>
-              <p style="font-size:0.85rem; color:var(--text-muted);">
-                Restore all products, stock levels, reviews, and logs back to the original Nexgenesis demonstration state.
+            <div class="card" style="display:flex; flex-direction:column; gap:var(--space-sm); border-color:#e4c7c7;">
+              <h3 style="font-size:1rem; color:var(--color-danger);">Database Maintenance</h3>
+              <p style="font-size:0.8125rem; color:var(--text-secondary);">
+                Reset all catalog items, warehouse counts, and reviews back to factory demonstration records.
               </p>
               <div style="margin-top:auto;">
-                <button class="btn btn-danger" id="resetFactoryBtn">
-                  <span>🔄</span> Reset to Factory Demo State
-                </button>
+                <button class="btn btn-danger" id="resetFactoryBtn">Reset to Factory Demo State</button>
               </div>
             </div>
           </div>
@@ -639,26 +804,27 @@
     </div>
   </div>
 
-  <!-- MODALS -->
+  <!-- ========================================================================= -->
+  <!-- MODALS AND DRAWERS -->
+  <!-- ========================================================================= -->
 
-  <!-- 1. Add / Edit Product Modal -->
+  <!-- Add / Edit Product Modal -->
   <div class="modal-overlay" id="productFormModal">
     <div class="modal-container large">
       <div class="modal-header">
-        <h3 class="modal-title" id="productModalTitle">Create New Product</h3>
-        <button class="icon-btn" id="closeProductModalBtn" title="Close">✕</button>
+        <h3 class="modal-title" id="productModalTitle">Add Product Record</h3>
+        <button class="btn btn-outline btn-sm" id="closeProductModalBtn">Close</button>
       </div>
       <div class="modal-body">
-        <form id="productForm">
-          <!-- Basic Details -->
-          <div class="form-grid">
+        <form id="productForm" style="display:flex; flex-direction:column; gap:var(--space-sm);">
+          <div class="form-grid-2">
             <div class="form-group">
               <label class="form-label" for="formProductTitle">Product Title *</label>
               <input type="text" class="form-input" id="formProductTitle" required placeholder="e.g. Nexgenesis HoloLens Pro">
             </div>
             <div class="form-group">
-              <label class="form-label" for="formProductSubtitle">Subtitle / Tagline</label>
-              <input type="text" class="form-input" id="formProductSubtitle" placeholder="e.g. Next-Gen Micro-LED Spatial Optics">
+              <label class="form-label" for="formProductSubtitle">Subtitle</label>
+              <input type="text" class="form-input" id="formProductSubtitle" placeholder="e.g. Micro-LED Spatial Waveguide">
             </div>
           </div>
 
@@ -668,7 +834,7 @@
               <input type="text" class="form-input" id="formProductSku" required placeholder="e.g. NXG-HLO-01">
             </div>
             <div class="form-group">
-              <label class="form-label" for="formProductBarcode">Barcode / EAN</label>
+              <label class="form-label" for="formProductBarcode">Barcode</label>
               <input type="text" class="form-input" id="formProductBarcode" placeholder="e.g. 890124982109">
             </div>
             <div class="form-group">
@@ -677,86 +843,71 @@
             </div>
           </div>
 
-          <!-- Pricing & Margin Calculator -->
           <div class="form-grid-3">
             <div class="form-group">
               <label class="form-label" for="formProductPrice">Selling Price ($) *</label>
               <input type="number" step="0.01" class="form-input" id="formProductPrice" required placeholder="499.00">
             </div>
             <div class="form-group">
-              <label class="form-label" for="formProductComparePrice">Compare-at Price ($)</label>
+              <label class="form-label" for="formProductComparePrice">Compare-At Price ($)</label>
               <input type="number" step="0.01" class="form-input" id="formProductComparePrice" placeholder="549.00">
             </div>
             <div class="form-group">
-              <label class="form-label" for="formProductCost">Cost per Item (COGS $)</label>
+              <label class="form-label" for="formProductCost">Cost of Goods (COGS $)</label>
               <input type="number" step="0.01" class="form-input" id="formProductCost" placeholder="210.00">
             </div>
           </div>
 
-          <!-- Real-Time Margin Box -->
-          <div class="margin-calc-box">
-            <div class="margin-stat-item">
-              <span class="margin-stat-label">Calculated Profit Margin</span>
-              <span class="margin-stat-val" id="formCalculatedMargin">57.9%</span>
+          <!-- Margin Preview -->
+          <div style="background:var(--bg-subtle); padding:var(--space-sm); border:1px solid var(--border-subtle); border-radius:var(--radius-xs); display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Calculated Margin</span>
+              <div id="formCalculatedMargin" style="font-size:1.1rem; font-weight:700; color:var(--color-success);">0%</div>
             </div>
-            <div class="margin-stat-item">
-              <span class="margin-stat-label">Gross Profit per Unit</span>
-              <span class="margin-stat-val" id="formCalculatedProfit" style="color:var(--color-primary);">$289.00</span>
+            <div>
+              <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Gross Profit per Unit</span>
+              <div id="formCalculatedProfit" style="font-size:1.1rem; font-weight:700; color:var(--color-accent);">$0.00</div>
             </div>
-            <div style="font-size:0.75rem; color:var(--text-muted); max-width:260px;">
-              Automatically calculated based on your Retail Price and Cost of Goods Sold.
-            </div>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Real-time calculation</span>
           </div>
 
-          <!-- Inventory & Status -->
-          <div class="form-grid-3" style="margin-top:var(--space-md);">
+          <div class="form-grid-3">
             <div class="form-group">
               <label class="form-label" for="formProductStock">Available Stock</label>
               <input type="number" class="form-input" id="formProductStock" value="100">
             </div>
             <div class="form-group">
-              <label class="form-label" for="formProductThreshold">Low Stock Alert Threshold</label>
+              <label class="form-label" for="formProductThreshold">Reorder Threshold</label>
               <input type="number" class="form-input" id="formProductThreshold" value="20">
             </div>
             <div class="form-group">
-              <label class="form-label" for="formProductStatus">Publication Status</label>
+              <label class="form-label" for="formProductStatus">Status</label>
               <select class="form-select" id="formProductStatus">
-                <option value="published">Published (Active)</option>
+                <option value="published">Published</option>
                 <option value="draft">Draft</option>
                 <option value="archived">Archived</option>
               </select>
             </div>
           </div>
 
-          <!-- Image Selection -->
           <div class="form-group">
-            <label class="form-label" for="formProductImage">Product Hero Visual Asset</label>
+            <label class="form-label" for="formProductImage">Visual Asset</label>
             <select class="form-select" id="formProductImage">
-              <option value="/assets/products/quantum-hub.jpg">Nexgenesis Quantum Hub (Matte Obsidian & Cyan Ring)</option>
-              <option value="/assets/products/pulse-watch.jpg">Nexgenesis Pulse Ultra Watch (Aerospace Titanium)</option>
-              <option value="/assets/products/aura-headphones.jpg">Nexgenesis Aura Pro Headphones (Spatial Audio ANC)</option>
-              <option value="/assets/products/vision-glasses.jpg">Nexgenesis Vision AR Glasses (Micro-LED Waveguides)</option>
+              <option value="/assets/products/quantum-hub.jpg">Nexgenesis Quantum Hub (Obsidian)</option>
+              <option value="/assets/products/pulse-watch.jpg">Nexgenesis Pulse Ultra Watch (Titanium)</option>
+              <option value="/assets/products/aura-headphones.jpg">Nexgenesis Aura Pro Headphones (Graphite)</option>
+              <option value="/assets/products/vision-glasses.jpg">Nexgenesis Vision AR Glasses (Waveguide)</option>
             </select>
           </div>
 
-          <!-- Tags -->
           <div class="form-group">
             <label class="form-label" for="formProductTags">Tags (comma separated)</label>
-            <input type="text" class="form-input" id="formProductTags" placeholder="Flagship, Wireless, Titanium, Best Seller">
+            <input type="text" class="form-input" id="formProductTags" placeholder="Hardware, Titanium, Flagship">
           </div>
 
-          <!-- Description -->
           <div class="form-group">
-            <label class="form-label" for="formProductDesc">Detailed Product Description</label>
-            <textarea class="form-textarea" id="formProductDesc" rows="3" placeholder="Provide full technical specifications and marketing copy..."></textarea>
-          </div>
-
-          <!-- Live SEO Snippet Preview -->
-          <div style="background:var(--bg-card-subtle); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:var(--space-md); margin-top:var(--space-md);">
-            <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">Google Search Preview Snippet</div>
-            <div id="seoPreviewTitle" style="color:#8ab4f8; font-size:1.05rem; font-weight:600; cursor:pointer;">Nexgenesis Pulse Ultra Smartwatch | Aerospace Grade Titanium</div>
-            <div style="color:#00875a; font-size:0.75rem; margin:2px 0;">https://nexgenesis.io/products/nexgenesis-pulse-ultra</div>
-            <div id="seoPreviewSnippet" style="color:var(--text-secondary); font-size:0.8rem; line-height:1.4;">Advanced biometric smartwatch with micro-OLED display and 7-day battery endurance. Precision forged from Grade 5 titanium.</div>
+            <label class="form-label" for="formProductDesc">Product Description</label>
+            <textarea class="form-textarea" id="formProductDesc" rows="3" placeholder="Enter technical specifications and operational description..."></textarea>
           </div>
         </form>
       </div>
@@ -767,29 +918,27 @@
     </div>
   </div>
 
-  <!-- 2. Side Drawer (Product Quick View) -->
+  <!-- Quick View Drawer -->
   <div class="drawer-overlay" id="drawerOverlay"></div>
   <aside class="drawer-panel" id="productDrawer">
     <div class="drawer-header">
-      <h3 class="modal-title" id="drawerProductTitle">Product Quick View</h3>
-      <button class="icon-btn" id="closeDrawerBtn" title="Close Drawer">✕</button>
+      <h3 id="drawerProductTitle" style="font-size:1.05rem;">Product Quick View</h3>
+      <button class="btn btn-outline btn-sm" id="closeDrawerBtn">Close</button>
     </div>
-    <div class="drawer-body" id="drawerBody">
-      <!-- Populated dynamically by UI.openDrawer -->
-    </div>
+    <div class="drawer-body" id="drawerBody"></div>
   </aside>
 
-  <!-- 3. Restock Modal -->
+  <!-- Restock Modal -->
   <div class="modal-overlay" id="restockModal">
-    <div class="modal-container" style="max-width:480px;">
+    <div class="modal-container" style="max-width:440px;">
       <div class="modal-header">
         <h3 class="modal-title">Create Restock Purchase Order</h3>
-        <button class="icon-btn" id="closeRestockModalBtn">✕</button>
+        <button class="btn btn-outline btn-sm" id="closeRestockModalBtn">Close</button>
       </div>
       <div class="modal-body">
-        <form id="restockForm">
+        <form id="restockForm" style="display:flex; flex-direction:column; gap:var(--space-sm);">
           <div class="form-group">
-            <label class="form-label" for="restockProductSelect">Select Target Product</label>
+            <label class="form-label" for="restockProductSelect">Product</label>
             <select class="form-select" id="restockProductSelect"></select>
           </div>
           <div class="form-group">
@@ -797,7 +946,7 @@
             <input type="number" class="form-input" id="restockQtyInput" min="1" value="50" required>
           </div>
           <div class="form-group">
-            <label class="form-label" for="restockWarehouseSelect">Destination Fulfillment Hub</label>
+            <label class="form-label" for="restockWarehouseSelect">Destination Hub</label>
             <select class="form-select" id="restockWarehouseSelect">
               <option value="na">North America Hub (NA-East)</option>
               <option value="eu">European Hub (EU-Central)</option>
@@ -808,20 +957,20 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="cancelRestockModalBtn">Cancel</button>
-        <button type="submit" form="restockForm" class="btn btn-primary">Submit Purchase Order</button>
+        <button type="submit" form="restockForm" class="btn btn-primary">Submit Order</button>
       </div>
     </div>
   </div>
 
-  <!-- 4. Confirmation Dialog Modal -->
+  <!-- Confirm Dialog Modal -->
   <div class="modal-overlay" id="confirmModal">
-    <div class="modal-container" style="max-width:440px;">
+    <div class="modal-container" style="max-width:420px;">
       <div class="modal-header">
         <h3 class="modal-title" id="confirmTitle">Confirm Action</h3>
-        <button class="icon-btn" id="closeConfirmModalBtn">✕</button>
+        <button class="btn btn-outline btn-sm" id="closeConfirmModalBtn">Close</button>
       </div>
       <div class="modal-body">
-        <p id="confirmMessage" style="font-size:0.95rem; color:var(--text-secondary); line-height:1.5;">Are you sure?</p>
+        <p id="confirmMessage" style="font-size:0.9rem; color:var(--text-secondary);">Are you sure?</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="confirmCancelBtn">Cancel</button>
@@ -830,10 +979,10 @@
     </div>
   </div>
 
-  <!-- 5. Toast Notifications Container -->
+  <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- Main JavaScript Bootstrap -->
+  <!-- Application Bootstrap -->
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
