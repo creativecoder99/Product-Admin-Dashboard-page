@@ -6,6 +6,7 @@ import { ProductManager } from './js/productManager.js';
 import { InventoryManager } from './js/inventoryManager.js';
 import { ReviewsManager } from './js/reviewsManager.js';
 import { ExportImportManager } from './js/exportImport.js';
+import { LandingManager } from './js/landingManager.js';
 
 class App {
   constructor() {
@@ -19,6 +20,7 @@ class App {
     this.inventoryManager = new InventoryManager(this.store);
     this.reviewsManager = new ReviewsManager(this.store);
     this.exportImportManager = new ExportImportManager(this.store);
+    this.landingManager = new LandingManager(this.store);
 
     // Subscribe to store updates
     this.store.subscribe('metrics:changed', () => this.renderKPIs());
@@ -26,6 +28,9 @@ class App {
       this.renderCharts();
       this.renderTopSellers();
       this.renderKPIs();
+      if (this.landingManager) {
+        this.landingManager.renderSandbox();
+      }
     });
     this.store.subscribe('currency:changed', () => {
       this.renderKPIs();
@@ -57,8 +62,16 @@ class App {
   bindRouting() {
     window.addEventListener('hashchange', () => {
       const hash = window.location.hash.replace(/^#\/?/, '').trim();
-      if (!hash || hash === 'landing') {
+      if (!hash || hash === 'landing' || hash.startsWith('landing-')) {
         this.store.setRoute('landing');
+        if (hash.startsWith('landing-')) {
+          setTimeout(() => {
+            const target = document.getElementById(hash);
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth' });
+            }
+          }, 60);
+        }
       } else if (hash === 'login' || hash === 'terms' || hash === 'privacy') {
         this.store.setRoute(hash);
       } else if (hash.startsWith('app') || hash === 'dashboard' || hash === 'products' || hash === 'inventory' || hash === 'analytics' || hash === 'reviews' || hash === 'settings') {
@@ -112,7 +125,17 @@ class App {
       this.switchDashboardView(targetView);
     }
 
-    window.scrollTo(0, 0);
+    const rawHash = window.location.hash.replace(/^#\/?/, '').trim();
+    if (rawHash.startsWith('landing-')) {
+      setTimeout(() => {
+        const target = document.getElementById(rawHash);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 60);
+    } else {
+      window.scrollTo(0, 0);
+    }
   }
 
   switchDashboardView(viewName) {

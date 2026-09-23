@@ -10,11 +10,24 @@
   transition: border-color var(--transition-normal);
 }
 
+.site-header-container {
+  max-width: 1360px;
+}
+
 .site-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-md);
   height: var(--header-height);
+  width: 100%;
+}
+
+.site-nav-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
 }
 
 .site-brand {
@@ -27,6 +40,7 @@
   font-size: 1.05rem;
   letter-spacing: -0.02em;
   transition: opacity var(--transition-fast);
+  white-space: nowrap;
 }
 
 .site-brand:hover {
@@ -40,22 +54,35 @@
   border: 1px solid var(--border-default);
   padding: 1px 6px;
   border-radius: var(--radius-xs);
+  white-space: nowrap;
 }
 
 .nav-links-group {
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
+  gap: var(--space-md);
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-links-group a {
   text-decoration: none;
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
+  white-space: nowrap;
   position: relative;
   transition: color var(--transition-fast);
+  padding: 4px 0;
+}
+
+.site-nav-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .nav-links-group a::after {

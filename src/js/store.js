@@ -122,8 +122,11 @@ class Store {
             expiresInMins: 60
           })
         });
+        if (response && response.status === 404) {
+          throw new Error('Local proxy not present');
+        }
       } catch (err) {
-        // Fallback to direct URL if /auth proxy is not available
+        // Fallback to direct URL if /auth proxy is not available (e.g. static hosting)
         response = await fetch('https://dummyjson.com/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

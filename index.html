@@ -14,19 +14,30 @@
   <div id="landingView" class="landing-view active">
     <!-- Site Navigation -->
     <header class="site-header">
-      <div class="container">
+      <div class="container site-header-container">
         <nav class="site-nav" aria-label="Main Navigation">
-          <a href="#landing" class="site-brand">
-            <span>Nexgenesis</span>
-            <span class="site-brand-tag">Operations</span>
-          </a>
+          <div class="site-nav-left">
+            <a href="#landing" class="site-brand">
+              <span>Nexgenesis</span>
+              <span class="site-brand-tag">Operations</span>
+            </a>
+            <div class="nav-status-pill" title="Global Telemetry Gateway Operational">
+              <span class="status-indicator-dot"></span>
+              <span>Mesh: 99.98% Active</span>
+            </div>
+          </div>
+
           <ul class="nav-links-group">
-            <li><a href="#landing-hardware">Hardware Line</a></li>
-            <li><a href="#landing-logistics">Fulfillment Hubs</a></li>
-            <li><a href="#terms">Terms</a></li>
-            <li><a href="#privacy">Privacy</a></li>
+            <li><a href="#landing-hardware">Hardware</a></li>
+            <li><a href="#landing-specs">Specifications</a></li>
+            <li><a href="#landing-architecture">Architecture</a></li>
+            <li><a href="#landing-sandbox">Sandbox</a></li>
+            <li><a href="#landing-logistics">Fulfillment</a></li>
+            <li><a href="#landing-compliance">Compliance</a></li>
           </ul>
-          <div style="display:flex; align-items:center; gap:var(--space-xs);">
+
+          <div class="site-nav-right">
+            <button type="button" class="btn btn-secondary btn-sm" data-action="open-procurement-modal">Procure</button>
             <a href="#login" class="btn btn-secondary btn-sm" id="landingLoginNavBtn">Sign In</a>
             <a href="#app/dashboard" class="btn btn-primary btn-sm">Launch Console</a>
           </div>
@@ -49,7 +60,7 @@
             </p>
             <div class="hero-actions">
               <a href="#app/dashboard" class="btn btn-primary btn-lg">Open Product Console</a>
-              <a href="#landing-hardware" class="btn btn-secondary btn-lg">Review Specifications</a>
+              <button type="button" class="btn btn-secondary btn-lg" data-action="open-procurement-modal">Procurement Inquiry</button>
             </div>
           </div>
           <div class="hero-visual-frame">
@@ -115,6 +126,212 @@
               </ul>
             </div>
           </article>
+
+          <!-- 4. Vision AR -->
+          <article class="product-feature-panel">
+            <img src="/assets/products/vision-glasses.jpg" alt="Nexgenesis Vision AR Glasses">
+            <div class="product-feature-content">
+              <h3>Vision AR</h3>
+              <p>Optical waveguide heads-up display for technician telemetry.</p>
+              <ul class="product-spec-list">
+                <li>Dual Micro-OLED 1080p diffractive waveguide</li>
+                <li>12MP global-shutter machine vision sensor</li>
+                <li>68g high-tensile magnesium alloy chassis</li>
+                <li>Standard Price: $799.00 (65.2% margin)</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technical Specification Inspector -->
+    <section class="landing-section" id="landing-specs">
+      <div class="container">
+        <div class="section-intro">
+          <h2>Engineering Specifications & Tolerances</h2>
+          <p>
+            Audit dimensional tolerances, radio frequency emissions, cryptographic chipsets, and thermal dissipation ratings across the fleet.
+          </p>
+        </div>
+
+        <div class="spec-inspector-container">
+          <!-- Left: Product Selector Tabs -->
+          <div class="spec-selector-list" role="tablist" aria-label="Hardware Units">
+            <button type="button" class="spec-selector-btn active" data-spec-id="quantum-hub" role="tab" aria-selected="true">
+              <span class="spec-btn-title">Quantum Hub</span>
+              <span class="spec-btn-subtitle">Neural Mesh Coordinator</span>
+            </button>
+            <button type="button" class="spec-selector-btn" data-spec-id="pulse-watch" role="tab" aria-selected="false">
+              <span class="spec-btn-title">Pulse Ultra</span>
+              <span class="spec-btn-subtitle">Biometric Wrist Node</span>
+            </button>
+            <button type="button" class="spec-selector-btn" data-spec-id="aura-headphones" role="tab" aria-selected="false">
+              <span class="spec-btn-title">Aura Pro</span>
+              <span class="spec-btn-subtitle">Spatial Acoustic Monitor</span>
+            </button>
+            <button type="button" class="spec-selector-btn" data-spec-id="vision-glasses" role="tab" aria-selected="false">
+              <span class="spec-btn-title">Vision AR</span>
+              <span class="spec-btn-subtitle">Industrial Optical HUD</span>
+            </button>
+
+            <div style="margin-top:var(--space-md); padding-top:var(--space-sm); border-top:1px solid var(--border-subtle);">
+              <button type="button" class="btn btn-secondary btn-sm" id="downloadSpecCsvBtn" style="width:100%; justify-content:center;">
+                Download Datasheet (.CSV)
+              </button>
+            </div>
+          </div>
+
+          <!-- Center: Physical Unit Preview -->
+          <div>
+            <div class="spec-visual-preview">
+              <img id="specPreviewImg" src="/assets/products/quantum-hub.jpg" alt="Nexgenesis Quantum Hub">
+            </div>
+            <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:var(--text-muted);">
+              <span id="specPreviewSku">SKU: NXG-HUB-01</span>
+              <span>Calibrated: NIST SP 800-88</span>
+            </div>
+          </div>
+
+          <!-- Right: Engineering Specs Table -->
+          <div class="spec-details-sheet">
+            <div>
+              <h3 id="specDetailTitle" style="font-size:1.15rem; margin-bottom:2px;">Nexgenesis Quantum Hub</h3>
+              <span id="specDetailSubtitle" style="font-size:0.8rem; color:var(--color-accent); font-weight:600;">Enterprise Neural Mesh Coordinator</span>
+            </div>
+            <p id="specDetailDesc" style="font-size:0.8125rem; color:var(--text-secondary); line-height:1.45;">
+              Central hardware coordinator orchestrating local low-latency Matter mesh clusters with on-device tensor inference and dual hardware security elements.
+            </p>
+
+            <table class="spec-table">
+              <tbody id="specTableBody">
+                <tr><td>Form Factor</td><td>Desktop / Rackmount (1U half-width)</td></tr>
+                <tr><td>Chassis Material</td><td>CNC Anodized 6061-T6 Aluminum</td></tr>
+                <tr><td>Dimensions</td><td>180 × 180 × 32 mm</td></tr>
+                <tr><td>Unit Weight</td><td>640 g (Net)</td></tr>
+                <tr><td>Ingress Protection</td><td>IP52 Industrial Sealed</td></tr>
+                <tr><td>Processor</td><td>Quad-core ARM Cortex-A76 @ 2.4GHz</td></tr>
+                <tr><td>Neural Processing</td><td>6.0 TOPS Dedicated NPU</td></tr>
+                <tr><td>Mesh Protocols</td><td>Thread / Matter 2.0, Zigbee 3.0</td></tr>
+                <tr><td>Power Supply</td><td>USB-C PD 45W / PoE+ (IEEE 802.3at)</td></tr>
+                <tr><td>Security Chipset</td><td>Dual Microchip ATECC608B HSM</td></tr>
+                <tr><td>Operating Range</td><td>-20°C to +65°C</td></tr>
+                <tr><td>MTBF Reliability</td><td>120,000 Hours Continuous</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- System Architecture & Telemetry Pipeline -->
+    <section class="landing-section" id="landing-architecture">
+      <div class="container">
+        <div class="section-intro">
+          <h2>Edge-to-Console Telemetry Architecture</h2>
+          <p>
+            A deterministic pipeline designed for low-latency hardware synchronization, local-first isolation, and cryptographic auditing.
+          </p>
+        </div>
+
+        <div class="architecture-flow-box">
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px; padding-bottom:var(--space-md); border-bottom:1px solid var(--border-subtle);">
+            <div>
+              <span class="disclosure-tag">Pipeline Topology</span>
+              <h3 style="font-size:1.1rem; margin-top:4px;">Asynchronous Ingestion and Resilient Local Mesh</h3>
+            </div>
+            <div style="font-size:0.8125rem; color:var(--text-muted); display:flex; gap:16px;">
+              <span>Protocol: <strong>mTLS v1.3</strong></span>
+              <span>Payload Latency: <strong>&lt; 14ms</strong></span>
+              <span>Zero-Cloud Sovereign: <strong>Supported</strong></span>
+            </div>
+          </div>
+
+          <div class="pipeline-steps-grid">
+            <div class="pipeline-card">
+              <span class="pipeline-step-badge">Stage 01</span>
+              <h4 class="pipeline-card-title">Physical Edge Sensing</h4>
+              <p class="pipeline-card-desc">
+                Wearable and ambient sensors gather raw optical, acoustic, and thermal telemetry, signed via on-chip ATECC608B crypto keys.
+              </p>
+            </div>
+
+            <div class="pipeline-card">
+              <span class="pipeline-step-badge">Stage 02</span>
+              <h4 class="pipeline-card-title">Local Mesh Aggregation</h4>
+              <p class="pipeline-card-desc">
+                The Quantum Hub coordinates peer-to-peer Matter mesh traffic with on-device tensor processing, filtering high-frequency noise.
+              </p>
+            </div>
+
+            <div class="pipeline-card">
+              <span class="pipeline-step-badge">Stage 03</span>
+              <h4 class="pipeline-card-title">Encrypted Transmission</h4>
+              <p class="pipeline-card-desc">
+                Batch telemetry streams through mutual-TLS tunnels with local fallback spooling during WAN network intermittency.
+              </p>
+            </div>
+
+            <div class="pipeline-card">
+              <span class="pipeline-step-badge">Stage 04</span>
+              <h4 class="pipeline-card-title">Operations Console</h4>
+              <p class="pipeline-card-desc">
+                Web administrative dashboard computes real-time gross margins, regional stock depletion, and operator audit logging.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Live Console Sandbox Preview -->
+    <section class="landing-section" id="landing-sandbox">
+      <div class="container">
+        <div class="section-intro">
+          <h2>Interactive Operations Sandbox</h2>
+          <p>
+            Test live hardware filtering, inventory verification, and margin calculations in an embedded, non-destructive console environment.
+          </p>
+        </div>
+
+        <div class="sandbox-preview-frame">
+          <div class="sandbox-header-bar">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background-color:var(--color-success);"></span>
+              <strong style="font-size:0.8125rem; color:var(--text-primary);">Sandbox Environment — Read-Only Mode</strong>
+              <span class="disclosure-tag" style="margin-left:4px;">Live Data Pipeline</span>
+            </div>
+            <div>
+              <a href="#app/dashboard" class="btn btn-primary btn-sm">Launch Production Console</a>
+            </div>
+          </div>
+
+          <div class="sandbox-body">
+            <!-- Filters Toolbar -->
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+              <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:280px;">
+                <input type="text" id="sandboxSearchInput" class="form-input" placeholder="Search by model name or SKU code..." style="max-width:320px; font-size:0.8125rem;">
+                <select id="sandboxCategorySelect" class="form-input" style="width:160px; font-size:0.8125rem;">
+                  <option value="all">All Categories</option>
+                  <option value="wearables">Wearables</option>
+                  <option value="audio">Audio</option>
+                  <option value="smart-home">Smart Home</option>
+                  <option value="optics">Optics</option>
+                </select>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span id="sandboxResultCount" style="font-size:0.775rem; color:var(--text-muted);">Loading catalog...</span>
+                <div style="display:inline-flex; border:1px solid var(--border-default); border-radius:var(--radius-xs); overflow:hidden;">
+                  <button type="button" id="sandboxViewTableBtn" class="btn btn-secondary btn-sm active" style="border-radius:0; border:none; padding:4px 10px; font-size:0.75rem;">Table</button>
+                  <button type="button" id="sandboxViewGridBtn" class="btn btn-secondary btn-sm" style="border-radius:0; border:none; border-left:1px solid var(--border-default); padding:4px 10px; font-size:0.75rem;">Grid</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sandbox Content Area -->
+            <div id="sandboxContent"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -161,6 +378,96 @@
                 <td>8 SKUs</td>
                 <td>$22,000</td>
                 <td><span class="badge badge-low-stock">Replenishment Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Supply Chain Traceability & SLA Cards -->
+        <div class="logistics-features-grid" style="margin-top:var(--space-xl);">
+          <div class="logistics-card">
+            <span class="disclosure-tag" style="align-self:flex-start;">Traceability</span>
+            <h3 style="font-size:0.95rem; margin-top:4px;">Unit Cryptographic Serialization</h3>
+            <p style="font-size:0.8125rem; color:var(--text-secondary); line-height:1.45;">
+              Every individual PCB assembly receives a permanent laser-etched 2D matrix UID cryptographically bound to its factory calibration signature.
+            </p>
+          </div>
+
+          <div class="logistics-card">
+            <span class="disclosure-tag" style="align-self:flex-start;">Replenishment</span>
+            <h3 style="font-size:0.95rem; margin-top:4px;">Deterministic 48-Hour SLA</h3>
+            <p style="font-size:0.8125rem; color:var(--text-secondary); line-height:1.45;">
+              Direct integration with major air freight carriers ensures zero-buffer regional replenishment between manufacturing lines and global fulfillment hubs.
+            </p>
+          </div>
+
+          <div class="logistics-card">
+            <span class="disclosure-tag" style="align-self:flex-start;">Procurement</span>
+            <h3 style="font-size:0.95rem; margin-top:4px;">Dedicated Enterprise Consignment</h3>
+            <p style="font-size:0.8125rem; color:var(--text-secondary); line-height:1.45;">
+              Volume commercial partners can establish segregated bonded warehouse allocations for mission-critical industrial deployments.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Compliance, Standards & Security Matrix -->
+    <section class="landing-section" id="landing-compliance">
+      <div class="container">
+        <div class="section-intro">
+          <h2>Regulatory Standards & Platform Security</h2>
+          <p>
+            Rigorous conformance with international telecommunications, environmental safety, and data sovereignty frameworks.
+          </p>
+        </div>
+
+        <div class="metrics-table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Standard / Directive</th>
+                <th>Governing Authority</th>
+                <th>Certification Scope</th>
+                <th>Verification Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>FCC Part 15 Class B</strong></td>
+                <td>Federal Communications Commission (US)</td>
+                <td>Unintentional radiators & digital device emissions</td>
+                <td><span class="badge badge-in-stock">Certified Compliant</span></td>
+              </tr>
+              <tr>
+                <td><strong>CE / RED Directive 2014/53/EU</strong></td>
+                <td>European Union Notified Body</td>
+                <td>Radio Equipment & Safety Conformance</td>
+                <td><span class="badge badge-in-stock">Certified Compliant</span></td>
+              </tr>
+              <tr>
+                <td><strong>RoHS Directive 2011/65/EU</strong></td>
+                <td>EU Directorate-General for Environment</td>
+                <td>Restriction of Hazardous Substances (Lead-Free)</td>
+                <td><span class="badge badge-in-stock">Verified Compliant</span></td>
+              </tr>
+              <tr>
+                <td><strong>IP68 Ingress Protection</strong></td>
+                <td>IEC Standard 60529</td>
+                <td>Dust-tight & continuous water submersion (100m)</td>
+                <td><span class="badge badge-in-stock">Laboratory Tested</span></td>
+              </tr>
+              <tr>
+                <td><strong>Local-First Telemetry Isolation</strong></td>
+                <td>Nexgenesis Architecture Specification</td>
+                <td>Zero involuntary telemetry transmission to third-party clouds</td>
+                <td><span class="badge badge-in-stock">Architecture Verified</span></td>
+              </tr>
+              <tr>
+                <td><strong>Role-Based Access Control (RBAC)</strong></td>
+                <td>NIST SP 800-162 Guidelines</td>
+                <td>Granular operator privilege tiers and tamper-evident audit logs</td>
+                <td><span class="badge badge-in-stock">Enforced in Console</span></td>
               </tr>
             </tbody>
           </table>
@@ -974,6 +1281,87 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="confirmCancelBtn">Cancel</button>
         <button type="button" class="btn btn-danger" id="confirmOkBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enterprise Hardware Procurement & Inquiry Modal -->
+  <div class="modal-overlay" id="procurementModal" role="dialog" aria-modal="true" aria-labelledby="procurementModalTitle">
+    <div class="modal-container large">
+      <div class="modal-header">
+        <div>
+          <span class="disclosure-tag" style="margin-bottom:2px;">Institutional Deployment</span>
+          <h2 id="procurementModalTitle" style="font-size:1.1rem; margin:0;">Enterprise Hardware Procurement & Integration</h2>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" data-action="close-procurement-modal" aria-label="Close modal">Close</button>
+      </div>
+      <div class="modal-body">
+        <div id="procurementResultNotice" style="display:none;"></div>
+
+        <form id="procurementInquiryForm">
+          <p style="font-size:0.8125rem; color:var(--text-secondary); margin-bottom:var(--space-md); line-height:1.45;">
+            Submit your deployment specifications to receive an audited quotation, EDI catalog integration parameters, and guaranteed regional fulfillment allocations under our 48-Hour SLA.
+          </p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="procureName">Authorized Representative</label>
+              <input type="text" class="form-input" id="procureName" placeholder="e.g. Dr. Arthur Vance" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="procureEmail">Corporate / Institutional Email</label>
+              <input type="email" class="form-input" id="procureEmail" placeholder="vance@enterprise.org" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="procureCompany">Organization / Enterprise Name</label>
+              <input type="text" class="form-input" id="procureCompany" placeholder="e.g. Continental Dynamics LLC" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="procureSku">Primary Fleet Target SKU</label>
+              <select class="form-input" id="procureSku" required>
+                <option value="quantum-hub">Quantum Hub (Neural Mesh Coordinator)</option>
+                <option value="pulse-watch">Pulse Ultra (Biometric Wrist Node)</option>
+                <option value="aura-headphones">Aura Pro (Spatial Acoustic Monitor)</option>
+                <option value="vision-glasses">Vision AR (Industrial Optical HUD)</option>
+                <option value="fleet-mixed">Mixed Architecture Fleet Deployment</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="procureVolume">Projected Unit Allocation</label>
+              <select class="form-input" id="procureVolume" required>
+                <option value="10-50">10 – 50 Units (Evaluation Pilot)</option>
+                <option value="50-250">50 – 250 Units (Regional Department)</option>
+                <option value="250-1000">250 – 1,000 Units (Commercial Rollout)</option>
+                <option value="1000+">1,000+ Units (Enterprise Global Fleet)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="procureRegion">Primary Dispatch Regional Hub</label>
+              <select class="form-input" id="procureRegion" required>
+                <option value="na-east">North America (NA-East)</option>
+                <option value="eu-central">Europe (EU-Central)</option>
+                <option value="apac-tokyo">Asia-Pacific (APAC-Tokyo)</option>
+                <option value="multi-region">Multi-Region Simultaneous Dispatch</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="procureNotes">Integration Topology & Custom Firmware Requirements</label>
+            <textarea class="form-input" id="procureNotes" rows="3" placeholder="Specify on-premise gateway requirements, Matter mesh topology, or customs clearance codes..."></textarea>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:var(--space-xs); margin-top:var(--space-md);">
+            <button type="button" class="btn btn-secondary" data-action="close-procurement-modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Transmit Procurement Inquiry</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
