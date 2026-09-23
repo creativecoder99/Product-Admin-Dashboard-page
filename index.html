@@ -205,15 +205,15 @@
       </div>
 
       <div class="login-demo-notice">
-        <strong>Demo Account Available:</strong>
-        <div style="margin-top:4px;">Email: <code>alex.vance@nexgenesis.internal</code></div>
-        <div>Password: <code>demo-pass</code></div>
+        <strong>Authentication Credentials (POST /auth/login):</strong>
+        <div style="margin-top:4px;">Username: <code>emilys</code></div>
+        <div>Password: <code>emilyspass</code></div>
       </div>
 
       <form id="loginForm" class="login-form">
         <div class="form-group">
-          <label class="form-label" for="loginEmail">Work Email</label>
-          <input type="email" class="form-input" id="loginEmail" value="alex.vance@nexgenesis.internal" required autocomplete="email">
+          <label class="form-label" for="loginEmail">Username</label>
+          <input type="text" class="form-input" id="loginEmail" value="emilys" required autocomplete="username">
         </div>
 
         <div class="form-group">
@@ -221,7 +221,7 @@
             <label class="form-label" for="loginPassword">Password</label>
             <span style="font-size:0.75rem; color:var(--text-muted);">Required</span>
           </div>
-          <input type="password" class="form-input" id="loginPassword" value="demo-pass" required autocomplete="current-password">
+          <input type="password" class="form-input" id="loginPassword" value="emilyspass" required autocomplete="current-password">
         </div>
 
         <div style="display:flex; align-items:center; justify-content:space-between;">
@@ -419,10 +419,15 @@
 
       <div class="sidebar-footer">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <span id="appSidebarUserName" style="font-weight:600; color:var(--text-primary);">Alex Vance</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div id="appSidebarAvatar"></div>
+            <div>
+              <div id="appSidebarUserName" style="font-weight:600; color:var(--text-primary); font-size:0.85rem;">Emily Johnson</div>
+              <div id="appSidebarUserRole" style="font-size:0.725rem; color:var(--text-muted);">Director of Operations</div>
+            </div>
+          </div>
           <button class="btn btn-outline btn-sm" id="sidebarLogoutBtn" style="padding:2px 6px; font-size:0.75rem;">Sign Out</button>
         </div>
-        <span id="appSidebarUserRole" style="font-size:0.725rem; color:var(--text-muted);">Operations Lead</span>
       </div>
     </aside>
 

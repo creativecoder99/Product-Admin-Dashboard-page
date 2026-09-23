@@ -97,39 +97,97 @@ class Store {
     }
   }
 
-  // Authentication
-  login(email, password) {
-    if (!email || !email.includes('@')) {
-      return { success: false, message: 'Please provide a valid work email address.' };
+  // Authentication - POST /auth/login
+  async login(username, password) {
+    const trimmedUsername = (username || '').trim();
+    const trimmedPassword = (password || '').trim();
+
+    if (!trimmedUsername) {
+      return { success: false, message: 'Please enter your username.' };
     }
-    if (!password || password.length < 4) {
-      return { success: false, message: 'Password must be at least 4 characters.' };
+    if (!trimmedPassword) {
+      return { success: false, message: 'Please enter your password.' };
     }
 
+    try {
+      // 1. Attempt POST to /auth/login (proxied to dummyjson by Vite) or direct endpoint
+      let response;
+      try {
+        response = await fetch('/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: trimmedUsername,
+            password: trimmedPassword,
+            expiresInMins: 60
+          })
+        });
+      } catch (err) {
+        // Fallback to direct URL if /auth proxy is not available
+        response = await fetch('https://dummyjson.com/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: trimmedUsername,
+            password: trimmedPassword,
+            expiresInMins: 60
+          })
+        });
+      }
+
+      if (response && response.ok) {
+        const data = await response.json();
+        const user = {
+          id: data.id,
+          username: data.username,
+          name: `${data.firstName} ${data.lastName}`,
+          email: data.email,
+          image: data.image,
+          token: data.accessToken,
+          role: 'Director of Product Operations'
+        };
+
+        this.currentUser = user;
+        localStorage.setItem('nxg_user', JSON.stringify(user));
+        this.dispatch('auth:changed', user);
+        this.addLog('Operator Sign In', `Signed in as ${user.name} (${user.username})`, user.name);
+        this.setRoute('app');
+        return { success: true, user };
+      } else {
+        const errData = await response.json().catch(() => ({}));
+        if (trimmedUsername === 'emilys' && trimmedPassword === 'emilyspass') {
+          return this.applyLocalEmilyUser();
+        }
+        return { success: false, message: errData.message || 'Invalid credentials. Expected username: emilys, password: emilyspass' };
+      }
+    } catch (networkErr) {
+      if (trimmedUsername === 'emilys' && trimmedPassword === 'emilyspass') {
+        return this.applyLocalEmilyUser();
+      }
+      return { success: false, message: 'Authentication network error. Please use username: emilys, password: emilyspass' };
+    }
+  }
+
+  applyLocalEmilyUser() {
     const user = {
-      email,
-      name: email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-      role: 'Operations Administrator'
+      id: 1,
+      username: 'emilys',
+      name: 'Emily Johnson',
+      email: 'emily.johnson@x.dummyjson.com',
+      image: 'https://dummyjson.com/icon/emilys/128',
+      token: 'simulated-token-emilys',
+      role: 'Director of Product Operations'
     };
-
     this.currentUser = user;
     localStorage.setItem('nxg_user', JSON.stringify(user));
     this.dispatch('auth:changed', user);
+    this.addLog('Operator Sign In', 'Signed in as Emily Johnson (emilys)', 'Emily Johnson');
     this.setRoute('app');
-    return { success: true };
+    return { success: true, user };
   }
 
-  loginDemo() {
-    const demoUser = {
-      email: 'alex.vance@nexgenesis.internal',
-      name: 'Alex Vance',
-      role: 'Operations Lead'
-    };
-    this.currentUser = demoUser;
-    localStorage.setItem('nxg_user', JSON.stringify(demoUser));
-    this.dispatch('auth:changed', demoUser);
-    this.setRoute('app');
-    return { success: true };
+  async loginDemo() {
+    return this.login('emilys', 'emilyspass');
   }
 
   logout() {

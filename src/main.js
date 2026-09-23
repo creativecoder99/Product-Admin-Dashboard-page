@@ -144,31 +144,46 @@ class App {
     const loginDemoBtn = document.getElementById('loginDemoBtn');
     const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
     const loginErrorMsg = document.getElementById('loginErrorMsg');
+    const loginBox = document.querySelector('.login-box');
+    const submitBtn = loginForm ? loginForm.querySelector('button[type="submit"]') : null;
 
-    if (loginForm) {
-      loginForm.onsubmit = (e) => {
+    if (loginForm && submitBtn) {
+      loginForm.onsubmit = async (e) => {
         e.preventDefault();
-        const email = document.getElementById('loginEmail').value.trim();
+        const username = document.getElementById('loginEmail').value.trim();
         const pass = document.getElementById('loginPassword').value.trim();
 
-        const result = this.store.login(email, pass);
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span class="spinner"></span> Authenticating...';
+        submitBtn.disabled = true;
+
+        const result = await this.store.login(username, pass);
+
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+
         if (result.success) {
           if (loginErrorMsg) loginErrorMsg.classList.remove('visible');
-          UI.showToast(`Signed in as ${this.store.currentUser.name}`, 'success');
+          UI.showToast(`Signed in as ${result.user.name}`, 'success');
         } else {
           if (loginErrorMsg) {
             loginErrorMsg.textContent = result.message;
             loginErrorMsg.classList.add('visible');
+          }
+          if (loginBox) {
+            loginBox.classList.remove('animate-shake');
+            void loginBox.offsetWidth; // trigger reflow
+            loginBox.classList.add('animate-shake');
           }
         }
       };
     }
 
     if (loginDemoBtn) {
-      loginDemoBtn.onclick = () => {
-        this.store.loginDemo();
-        if (loginErrorMsg) loginErrorMsg.classList.remove('visible');
-        UI.showToast(`Signed in as ${this.store.currentUser.name}`, 'success');
+      loginDemoBtn.onclick = async () => {
+        document.getElementById('loginEmail').value = 'emilys';
+        document.getElementById('loginPassword').value = 'emilyspass';
+        if (loginForm) loginForm.requestSubmit();
       };
     }
 
@@ -183,9 +198,14 @@ class App {
   updateAuthUI(user) {
     const nameEl = document.getElementById('appSidebarUserName');
     const roleEl = document.getElementById('appSidebarUserRole');
+    const avatarEl = document.getElementById('appSidebarAvatar');
 
-    if (nameEl) nameEl.textContent = user ? user.name : 'Alex Vance';
-    if (roleEl) roleEl.textContent = user ? user.role : 'Operations Lead';
+    if (nameEl) nameEl.textContent = user ? user.name : 'Guest Operator';
+    if (roleEl) roleEl.textContent = user ? user.role : 'Signed Out';
+
+    if (avatarEl && user && user.image) {
+      avatarEl.innerHTML = `<img src="${user.image}" alt="${user.name}" style="width:28px; height:28px; border-radius:var(--radius-xs); object-fit:cover;">`;
+    }
   }
 
   bindGlobalEvents() {
