@@ -1197,13 +1197,44 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="formProductImage">Visual Asset</label>
-            <select class="form-select" id="formProductImage">
-              <option value="/assets/products/quantum-hub.jpg">Nexgenesis Quantum Hub (Obsidian)</option>
-              <option value="/assets/products/pulse-watch.jpg">Nexgenesis Pulse Ultra Watch (Titanium)</option>
-              <option value="/assets/products/aura-headphones.jpg">Nexgenesis Aura Pro Headphones (Graphite)</option>
-              <option value="/assets/products/vision-glasses.jpg">Nexgenesis Vision AR Glasses (Waveguide)</option>
-            </select>
+            <label class="form-label">Product Visual Asset / Image *</label>
+            <div class="product-image-uploader-box">
+              <div class="product-image-preview-wrapper">
+                <img id="formProductImagePreview" src="/assets/products/quantum-hub.jpg" alt="Product Image Preview">
+              </div>
+              <div class="product-image-uploader-controls">
+                <div class="image-upload-dropzone" id="imageUploadDropzone">
+                  <input type="file" id="formProductImageFile" accept="image/png, image/jpeg, image/webp, image/svg+xml, image/gif" style="display:none;">
+                  <div style="font-weight:600; font-size:0.85rem; color:var(--text-primary);">
+                    Upload Product Image
+                  </div>
+                  <div style="font-size:0.75rem; color:var(--text-muted); margin: 2px 0 6px;">
+                    Drag & drop an image here or click to browse files
+                  </div>
+                  <div style="display:flex; justify-content:center; gap:6px;">
+                    <button type="button" class="btn btn-secondary btn-sm" id="browseImageFileBtn">
+                      Browse File
+                    </button>
+                    <button type="button" class="btn btn-outline btn-sm" id="resetImageFileBtn" style="display:none;">
+                      Reset
+                    </button>
+                  </div>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+                  <span style="font-size:0.75rem; color:var(--text-muted); white-space:nowrap;">Or select preset:</span>
+                  <select class="form-select" id="formProductImagePreset" style="font-size:0.8125rem; flex:1;">
+                    <option value="/assets/products/quantum-hub.jpg">Quantum Hub (Obsidian)</option>
+                    <option value="/assets/products/pulse-watch.jpg">Pulse Ultra Watch (Titanium)</option>
+                    <option value="/assets/products/aura-headphones.jpg">Aura Pro Headphones (Graphite)</option>
+                    <option value="/assets/products/vision-glasses.jpg">Vision AR Glasses (Waveguide)</option>
+                    <option value="custom">Custom Image URL...</option>
+                  </select>
+                </div>
+                <input type="url" class="form-input" id="formProductCustomUrl" placeholder="https://example.com/hardware-photo.jpg" style="display:none; font-size:0.8125rem;">
+                <input type="hidden" id="formProductImageFinalValue" value="/assets/products/quantum-hub.jpg">
+              </div>
+            </div>
           </div>
 
           <div class="form-group">
@@ -1217,9 +1248,12 @@
           </div>
         </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" id="cancelProductModalBtn">Cancel</button>
-        <button type="submit" form="productForm" class="btn btn-primary">Save Product</button>
+      <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+        <button type="button" class="btn btn-danger btn-sm" id="deleteProductFromModalBtn" style="display:none;">Delete Product</button>
+        <div style="display:flex; gap:var(--space-xs); margin-left:auto;">
+          <button type="button" class="btn btn-secondary" id="cancelProductModalBtn">Cancel</button>
+          <button type="submit" form="productForm" class="btn btn-primary">Save Product</button>
+        </div>
       </div>
     </div>
   </div>

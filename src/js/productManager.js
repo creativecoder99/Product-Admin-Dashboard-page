@@ -349,6 +349,7 @@ export class ProductManager {
             <div style="display:flex; gap:4px;">
               <button class="btn btn-secondary btn-sm grid-view-btn">View</button>
               <button class="btn btn-secondary btn-sm grid-edit-btn">Edit</button>
+              <button class="btn btn-secondary btn-sm grid-delete-btn" style="color:var(--color-danger);" title="Delete Product">Delete</button>
             </div>
           </div>
         </div>
@@ -356,6 +357,16 @@ export class ProductManager {
 
       card.querySelector('.grid-view-btn').onclick = () => UI.openDrawer(p, this.store);
       card.querySelector('.grid-edit-btn').onclick = () => this.openEditModal(p);
+      card.querySelector('.grid-delete-btn').onclick = () => {
+        UI.showConfirm(
+          'Delete Product Record',
+          `Are you sure you want to delete ${p.name}? This action removes the record from the catalog and recalculates inventory valuations.`,
+          () => {
+            this.store.deleteProduct(p.id);
+            UI.showToast(`Deleted ${p.name}`, 'success');
+          }
+        );
+      };
 
       this.productGrid.appendChild(card);
     });
@@ -403,6 +414,49 @@ export class ProductManager {
     this.paginationContainer.appendChild(nextBtn);
   }
 
+  setImageValue(url, isUploaded = false, filename = '') {
+    const preview = document.getElementById('formProductImagePreview');
+    const finalVal = document.getElementById('formProductImageFinalValue');
+    const resetBtn = document.getElementById('resetImageFileBtn');
+
+    if (preview) preview.src = url;
+    if (finalVal) finalVal.value = url;
+
+    if (resetBtn) {
+      resetBtn.style.display = isUploaded ? 'inline-flex' : 'none';
+    }
+  }
+
+  handleImageFile(file) {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      UI.showToast('Please select a valid image file (PNG, JPG, WebP, SVG)', 'error');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      UI.showToast('Image file size must be less than 5MB', 'error');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target.result;
+      this.setImageValue(dataUrl, true, file.name);
+      const presetSel = document.getElementById('formProductImagePreset');
+      if (presetSel) presetSel.value = 'custom';
+      const customUrl = document.getElementById('formProductCustomUrl');
+      if (customUrl) {
+        customUrl.style.display = 'none';
+        customUrl.value = '';
+      }
+      UI.showToast(`Uploaded image: ${file.name}`, 'success');
+    };
+    reader.onerror = () => {
+      UI.showToast('Failed to read image file', 'error');
+    };
+    reader.readAsDataURL(file);
+  }
+
   bindFormEvents() {
     const form = document.getElementById('productForm');
     const priceInput = document.getElementById('formProductPrice');
@@ -428,6 +482,84 @@ export class ProductManager {
     if (closeBtn) closeBtn.onclick = () => UI.closeModal('productFormModal');
     if (cancelBtn) cancelBtn.onclick = () => UI.closeModal('productFormModal');
 
+    // Image Upload Controls
+    const fileInput = document.getElementById('formProductImageFile');
+    const browseBtn = document.getElementById('browseImageFileBtn');
+    const resetBtn = document.getElementById('resetImageFileBtn');
+    const dropzone = document.getElementById('imageUploadDropzone');
+    const presetSelect = document.getElementById('formProductImagePreset');
+    const customUrlInput = document.getElementById('formProductCustomUrl');
+
+    if (browseBtn && fileInput) {
+      browseBtn.onclick = (e) => {
+        e.stopPropagation();
+        fileInput.click();
+      };
+    }
+
+    if (fileInput) {
+      fileInput.onchange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+          this.handleImageFile(e.target.files[0]);
+        }
+      };
+    }
+
+    if (dropzone) {
+      dropzone.onclick = () => {
+        if (fileInput) fileInput.click();
+      };
+      dropzone.ondragover = (e) => {
+        e.preventDefault();
+        dropzone.classList.add('dragover');
+      };
+      dropzone.ondragleave = () => {
+        dropzone.classList.remove('dragover');
+      };
+      dropzone.ondrop = (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+          this.handleImageFile(e.dataTransfer.files[0]);
+        }
+      };
+    }
+
+    if (resetBtn) {
+      resetBtn.onclick = (e) => {
+        e.stopPropagation();
+        if (fileInput) fileInput.value = '';
+        const defaultPreset = '/assets/products/quantum-hub.jpg';
+        if (presetSelect) presetSelect.value = defaultPreset;
+        if (customUrlInput) {
+          customUrlInput.value = '';
+          customUrlInput.style.display = 'none';
+        }
+        this.setImageValue(defaultPreset, false);
+      };
+    }
+
+    if (presetSelect) {
+      presetSelect.onchange = (e) => {
+        const val = e.target.value;
+        if (val === 'custom') {
+          if (customUrlInput) customUrlInput.style.display = 'block';
+        } else {
+          if (customUrlInput) customUrlInput.style.display = 'none';
+          this.setImageValue(val, false);
+        }
+      };
+    }
+
+    if (customUrlInput) {
+      customUrlInput.oninput = (e) => {
+        const val = e.target.value.trim();
+        if (val) {
+          this.setImageValue(val, false);
+        }
+      };
+    }
+
     if (form) {
       form.onsubmit = (e) => {
         e.preventDefault();
@@ -443,6 +575,24 @@ export class ProductManager {
     if (modalTitle) modalTitle.textContent = 'Add Product Record';
     if (form) form.reset();
 
+    const deleteBtn = document.getElementById('deleteProductFromModalBtn');
+    if (deleteBtn) deleteBtn.style.display = 'none';
+
+    const defaultImg = '/assets/products/quantum-hub.jpg';
+    this.setImageValue(defaultImg, false);
+
+    const presetSelect = document.getElementById('formProductImagePreset');
+    if (presetSelect) presetSelect.value = defaultImg;
+
+    const customUrlInput = document.getElementById('formProductCustomUrl');
+    if (customUrlInput) {
+      customUrlInput.value = '';
+      customUrlInput.style.display = 'none';
+    }
+
+    const fileInput = document.getElementById('formProductImageFile');
+    if (fileInput) fileInput.value = '';
+
     this.populateCategorySelect();
     document.getElementById('formCalculatedMargin').textContent = '0%';
     document.getElementById('formCalculatedProfit').textContent = '$0.00';
@@ -456,6 +606,50 @@ export class ProductManager {
     const modalTitle = document.getElementById('productModalTitle');
     if (modalTitle) modalTitle.textContent = `Edit Product: ${product.name}`;
     if (form) form.reset();
+
+    const deleteBtn = document.getElementById('deleteProductFromModalBtn');
+    if (deleteBtn) {
+      deleteBtn.style.display = 'inline-flex';
+      deleteBtn.onclick = () => {
+        UI.showConfirm(
+          'Delete Product Record',
+          `Are you sure you want to permanently delete "${product.name}"? This action cannot be undone.`,
+          () => {
+            UI.closeModal('productFormModal');
+            this.store.deleteProduct(product.id);
+            UI.showToast(`Permanently deleted ${product.name}`, 'success');
+          }
+        );
+      };
+    }
+
+    const img = product.image || '/assets/products/quantum-hub.jpg';
+    const isPreset = [
+      '/assets/products/quantum-hub.jpg',
+      '/assets/products/pulse-watch.jpg',
+      '/assets/products/aura-headphones.jpg',
+      '/assets/products/vision-glasses.jpg'
+    ].includes(img);
+
+    this.setImageValue(img, !isPreset);
+
+    const presetSelect = document.getElementById('formProductImagePreset');
+    const customUrlInput = document.getElementById('formProductCustomUrl');
+    if (presetSelect) {
+      if (isPreset) {
+        presetSelect.value = img;
+        if (customUrlInput) customUrlInput.style.display = 'none';
+      } else {
+        presetSelect.value = 'custom';
+        if (customUrlInput) {
+          customUrlInput.style.display = img.startsWith('data:') ? 'none' : 'block';
+          customUrlInput.value = img.startsWith('data:') ? '' : img;
+        }
+      }
+    }
+
+    const fileInput = document.getElementById('formProductImageFile');
+    if (fileInput) fileInput.value = '';
 
     this.populateCategorySelect();
 
@@ -472,9 +666,6 @@ export class ProductManager {
     document.getElementById('formProductThreshold').value = product.lowStockThreshold || 15;
     document.getElementById('formProductDesc').value = product.description || '';
     document.getElementById('formProductTags').value = (product.tags || []).join(', ');
-
-    const imgSelect = document.getElementById('formProductImage');
-    if (imgSelect) imgSelect.value = product.image || '/assets/products/quantum-hub.jpg';
 
     const price = product.price || 0;
     const cost = product.cost || 0;
@@ -513,7 +704,7 @@ export class ProductManager {
     const lowStockThreshold = parseInt(document.getElementById('formProductThreshold').value, 10) || 15;
     const description = document.getElementById('formProductDesc').value.trim();
     const tagsRaw = document.getElementById('formProductTags').value;
-    const image = document.getElementById('formProductImage').value;
+    const image = document.getElementById('formProductImageFinalValue')?.value || '/assets/products/quantum-hub.jpg';
 
     const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
 

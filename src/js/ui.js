@@ -178,6 +178,10 @@ export class UI {
             Restock Inventory
           </button>
         </div>
+
+        <button class="btn btn-danger btn-sm" id="drawerDeleteBtn" style="width:100%; margin-top:8px;">
+          Delete Product Record
+        </button>
       </div>
     `;
 
@@ -198,6 +202,21 @@ export class UI {
         store.restockProduct(product.id, 25, 'na');
         this.showToast(`Restocked 25 units for ${product.name}`, 'success');
         this.openDrawer(store.products.find(p => p.id === product.id), store);
+      };
+    }
+
+    const deleteBtn = bodyEl.querySelector('#drawerDeleteBtn');
+    if (deleteBtn) {
+      deleteBtn.onclick = () => {
+        this.showConfirm(
+          'Delete Product Record',
+          `Are you sure you want to permanently delete ${product.name}? This action removes all inventory, pricing, and telemetry data.`,
+          () => {
+            this.closeDrawer();
+            store.deleteProduct(product.id);
+            this.showToast(`Permanently deleted ${product.name}`, 'success');
+          }
+        );
       };
     }
   }
