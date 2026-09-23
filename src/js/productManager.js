@@ -4,7 +4,44 @@ export class ProductManager {
   constructor(store) {
     this.store = store;
     this.editingProductId = null;
+    this.searchDebounceTimer = null;
+    this.searchRequestId = 0;
+    this.searchAbortController = null;
+    this.isSaving = false;
+    this.syncPageFromURL();
     this.init();
+  }
+
+  syncPageFromURL(queryString = null) {
+    let pageParam = null;
+    if (queryString) {
+      const q = queryString.startsWith('?') ? queryString.slice(1) : queryString;
+      const params = new URLSearchParams(q);
+      if (params.has('page')) pageParam = params.get('page');
+    } else {
+      if (window.location.search) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('page')) pageParam = params.get('page');
+      }
+      if (!pageParam && window.location.hash.includes('?')) {
+        const hashQuery = window.location.hash.split('?')[1];
+        const params = new URLSearchParams(hashQuery);
+        if (params.has('page')) pageParam = params.get('page');
+      }
+    }
+
+    if (pageParam !== null) {
+      let parsed = parseInt(pageParam, 10);
+      if (isNaN(parsed) || parsed < 1) {
+        parsed = 1;
+      }
+      const filtered = this.store.getFilteredProducts();
+      const totalPages = Math.max(1, Math.ceil(filtered.length / this.store.productFilter.pageSize));
+      if (parsed > totalPages) {
+        parsed = totalPages;
+      }
+      this.store.productFilter.page = parsed;
+    }
   }
 
   init() {
@@ -39,9 +76,48 @@ export class ProductManager {
 
     if (searchInput) {
       searchInput.oninput = (e) => {
-        this.store.productFilter.search = e.target.value;
-        this.store.productFilter.page = 1;
-        this.render();
+        const query = e.target.value;
+        clearTimeout(this.searchDebounceTimer);
+
+        if (this.searchAbortController) {
+          this.searchAbortController.abort();
+        }
+
+        this.searchDebounceTimer = setTimeout(async () => {
+          const currentReqId = ++this.searchRequestId;
+          this.searchAbortController = new AbortController();
+          const { signal } = this.searchAbortController;
+
+          try {
+            // Check for simulated or network delay parameter (&delay=2000)
+            const urlQuery = window.location.search || (window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '');
+            const params = new URLSearchParams(urlQuery);
+            const delayMs = parseInt(params.get('delay'), 10) || 0;
+
+            if (delayMs > 0) {
+              await new Promise((resolve, reject) => {
+                const timer = setTimeout(resolve, delayMs);
+                signal.addEventListener('abort', () => {
+                  clearTimeout(timer);
+                  reject(new DOMException('Search request aborted', 'AbortError'));
+                });
+              });
+            }
+
+            // Stale check: if a newer search was initiated, discard this response
+            if (currentReqId !== this.searchRequestId) {
+              return;
+            }
+
+            this.store.productFilter.search = query;
+            this.store.productFilter.page = 1;
+            this.render();
+          } catch (err) {
+            if (err.name !== 'AbortError') {
+              console.error('Search error:', err);
+            }
+          }
+        }, 250);
       };
     }
 
@@ -165,15 +241,19 @@ export class ProductManager {
 
   render() {
     const filtered = this.store.getFilteredProducts();
-    const { page, pageSize, viewMode } = this.store.productFilter;
+    const { pageSize, viewMode } = this.store.productFilter;
     const totalItems = filtered.length;
-    const totalPages = Math.ceil(totalItems / pageSize) || 1;
+    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
 
-    if (page > totalPages) {
-      this.store.productFilter.page = totalPages;
+    let safePage = parseInt(this.store.productFilter.page, 10);
+    if (isNaN(safePage) || safePage < 1) {
+      safePage = 1;
+    } else if (safePage > totalPages) {
+      safePage = totalPages;
     }
+    this.store.productFilter.page = safePage;
 
-    const start = (this.store.productFilter.page - 1) * pageSize;
+    const start = (safePage - 1) * pageSize;
     const currentProducts = filtered.slice(start, start + pageSize);
 
     if (this.paginationInfo) {
@@ -691,53 +771,76 @@ export class ProductManager {
   }
 
   saveProductForm() {
-    const name = document.getElementById('formProductTitle').value.trim();
-    const subtitle = document.getElementById('formProductSubtitle').value.trim();
-    const sku = document.getElementById('formProductSku').value.trim();
-    const barcode = document.getElementById('formProductBarcode').value.trim();
-    const category = document.getElementById('formProductCategory').value;
-    const status = document.getElementById('formProductStatus').value;
-    const price = parseFloat(document.getElementById('formProductPrice').value) || 0;
-    const comparePrice = parseFloat(document.getElementById('formProductComparePrice').value) || 0;
-    const cost = parseFloat(document.getElementById('formProductCost').value) || 0;
-    const stock = parseInt(document.getElementById('formProductStock').value, 10) || 0;
-    const lowStockThreshold = parseInt(document.getElementById('formProductThreshold').value, 10) || 15;
-    const description = document.getElementById('formProductDesc').value.trim();
-    const tagsRaw = document.getElementById('formProductTags').value;
-    const image = document.getElementById('formProductImageFinalValue')?.value || '/assets/products/quantum-hub.jpg';
+    if (this.isSaving) return;
+    this.isSaving = true;
 
-    const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
-
-    if (!name || !sku) {
-      UI.showToast('Product Title and SKU are required', 'error');
-      return;
+    const saveBtn = document.getElementById('saveProductBtn') || document.querySelector('button[form="productForm"]');
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.dataset.origText = saveBtn.textContent;
+      saveBtn.textContent = 'Saving...';
     }
 
-    const payload = {
-      name,
-      subtitle,
-      sku,
-      barcode: barcode || '890' + Math.floor(100000000 + Math.random() * 900000000),
-      category,
-      status,
-      price,
-      comparePrice,
-      cost,
-      stock,
-      lowStockThreshold,
-      description,
-      tags,
-      image
-    };
+    try {
+      const name = document.getElementById('formProductTitle').value.trim();
+      const subtitle = document.getElementById('formProductSubtitle').value.trim();
+      const sku = document.getElementById('formProductSku').value.trim();
+      const barcode = document.getElementById('formProductBarcode').value.trim();
+      const category = document.getElementById('formProductCategory').value;
+      const status = document.getElementById('formProductStatus').value;
+      const price = parseFloat(document.getElementById('formProductPrice').value) || 0;
+      const comparePrice = parseFloat(document.getElementById('formProductComparePrice').value) || 0;
+      const cost = parseFloat(document.getElementById('formProductCost').value) || 0;
+      const stock = parseInt(document.getElementById('formProductStock').value, 10) || 0;
+      const lowStockThreshold = parseInt(document.getElementById('formProductThreshold').value, 10) || 15;
+      const description = document.getElementById('formProductDesc').value.trim();
+      const tagsRaw = document.getElementById('formProductTags').value;
+      const image = document.getElementById('formProductImageFinalValue')?.value || '/assets/products/quantum-hub.jpg';
 
-    if (this.editingProductId) {
-      this.store.updateProduct(this.editingProductId, payload);
-      UI.showToast(`Updated ${name}`, 'success');
-    } else {
-      this.store.addProduct(payload);
-      UI.showToast(`Created ${name}`, 'success');
+      const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+
+      if (!name || !sku) {
+        UI.showToast('Product Title and SKU are required', 'error');
+        return;
+      }
+
+      const payload = {
+        name,
+        subtitle,
+        sku,
+        barcode: barcode || '890' + Math.floor(100000000 + Math.random() * 900000000),
+        category,
+        status,
+        price,
+        comparePrice,
+        cost,
+        stock,
+        lowStockThreshold,
+        description,
+        tags,
+        image
+      };
+
+      if (this.editingProductId) {
+        this.store.updateProduct(this.editingProductId, payload);
+        UI.showToast(`Updated ${name}`, 'success');
+      } else {
+        this.store.addProduct(payload);
+        UI.showToast(`Created ${name}`, 'success');
+      }
+
+      UI.closeModal('productFormModal');
+    } catch (err) {
+      console.error('Error saving product:', err);
+      UI.showToast('An error occurred while saving the product', 'error');
+    } finally {
+      this.isSaving = false;
+      if (saveBtn) {
+        saveBtn.disabled = false;
+        if (saveBtn.dataset.origText) {
+          saveBtn.textContent = saveBtn.dataset.origText;
+        }
+      }
     }
-
-    UI.closeModal('productFormModal');
   }
 }

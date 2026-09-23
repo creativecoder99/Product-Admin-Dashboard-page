@@ -36,7 +36,7 @@ class Store {
 
     // Routing
     this.currentRoute = this.getRouteFromHash() || (this.currentUser ? 'app' : 'landing');
-    this.activeDashboardView = 'dashboard';
+    this.activeDashboardView = this.getSubViewFromHash();
 
     // UI state
     this.sidebarCollapsed = localStorage.getItem('nxg_sidebar_collapsed') === 'true';
@@ -60,7 +60,8 @@ class Store {
   }
 
   getRouteFromHash() {
-    const hash = window.location.hash.replace(/^#\/?/, '').trim();
+    const raw = window.location.hash.replace(/^#\/?/, '').trim();
+    const hash = raw.split('?')[0];
     if (!hash) return 'landing';
     if (hash === 'login' || hash === 'terms' || hash === 'privacy' || hash === 'landing') {
       return hash;
@@ -69,6 +70,18 @@ class Store {
       return 'app';
     }
     return 'landing';
+  }
+
+  getSubViewFromHash() {
+    const raw = window.location.hash.replace(/^#\/?/, '').trim();
+    const hash = raw.split('?')[0];
+    if (['dashboard', 'products', 'inventory', 'analytics', 'reviews', 'settings'].includes(hash)) {
+      return hash;
+    }
+    if (hash.startsWith('app/')) {
+      return hash.split('/')[1] || 'dashboard';
+    }
+    return 'dashboard';
   }
 
   // Pub/Sub

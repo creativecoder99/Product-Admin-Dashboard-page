@@ -57,9 +57,14 @@ export class UI {
     if (msgEl) msgEl.textContent = message;
 
     const newOkBtn = okBtn.cloneNode(true);
+    newOkBtn.disabled = false;
     okBtn.parentNode.replaceChild(newOkBtn, okBtn);
 
+    let hasConfirmed = false;
     newOkBtn.onclick = () => {
+      if (hasConfirmed) return;
+      hasConfirmed = true;
+      newOkBtn.disabled = true;
       this.closeModal('confirmModal');
       onConfirm();
     };

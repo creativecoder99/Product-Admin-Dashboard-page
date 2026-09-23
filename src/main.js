@@ -61,7 +61,13 @@ class App {
 
   bindRouting() {
     window.addEventListener('hashchange', () => {
-      const hash = window.location.hash.replace(/^#\/?/, '').trim();
+      const rawHash = window.location.hash.replace(/^#\/?/, '').trim();
+      const [hash, queryString] = rawHash.split('?');
+
+      if (this.productManager) {
+        this.productManager.syncPageFromURL(queryString || window.location.search);
+      }
+
       if (!hash || hash === 'landing' || hash.startsWith('landing-')) {
         this.store.setRoute('landing');
         if (hash.startsWith('landing-')) {
@@ -169,41 +175,51 @@ class App {
     const loginErrorMsg = document.getElementById('loginErrorMsg');
     const loginBox = document.querySelector('.login-box');
     const submitBtn = loginForm ? loginForm.querySelector('button[type="submit"]') : null;
+    this.isLoggingIn = false;
 
     if (loginForm && submitBtn) {
       loginForm.onsubmit = async (e) => {
         e.preventDefault();
+        if (this.isLoggingIn) return;
+        this.isLoggingIn = true;
+
         const username = document.getElementById('loginEmail').value.trim();
         const pass = document.getElementById('loginPassword').value.trim();
 
         const originalBtnText = submitBtn.innerHTML;
         submitBtn.innerHTML = '<span class="spinner"></span> Authenticating...';
         submitBtn.disabled = true;
+        if (loginDemoBtn) loginDemoBtn.disabled = true;
 
-        const result = await this.store.login(username, pass);
+        try {
+          const result = await this.store.login(username, pass);
 
-        submitBtn.innerHTML = originalBtnText;
-        submitBtn.disabled = false;
-
-        if (result.success) {
-          if (loginErrorMsg) loginErrorMsg.classList.remove('visible');
-          UI.showToast(`Signed in as ${result.user.name}`, 'success');
-        } else {
-          if (loginErrorMsg) {
-            loginErrorMsg.textContent = result.message;
-            loginErrorMsg.classList.add('visible');
+          if (result.success) {
+            if (loginErrorMsg) loginErrorMsg.classList.remove('visible');
+            UI.showToast(`Signed in as ${result.user.name}`, 'success');
+          } else {
+            if (loginErrorMsg) {
+              loginErrorMsg.textContent = result.message;
+              loginErrorMsg.classList.add('visible');
+            }
+            if (loginBox) {
+              loginBox.classList.remove('animate-shake');
+              void loginBox.offsetWidth; // trigger reflow
+              loginBox.classList.add('animate-shake');
+            }
           }
-          if (loginBox) {
-            loginBox.classList.remove('animate-shake');
-            void loginBox.offsetWidth; // trigger reflow
-            loginBox.classList.add('animate-shake');
-          }
+        } finally {
+          this.isLoggingIn = false;
+          submitBtn.innerHTML = originalBtnText;
+          submitBtn.disabled = false;
+          if (loginDemoBtn) loginDemoBtn.disabled = false;
         }
       };
     }
 
     if (loginDemoBtn) {
       loginDemoBtn.onclick = async () => {
+        if (this.isLoggingIn) return;
         document.getElementById('loginEmail').value = 'emilys';
         document.getElementById('loginPassword').value = 'emilyspass';
         if (loginForm) loginForm.requestSubmit();
